@@ -6,6 +6,10 @@ TagManager:
   tags:
   - Tile
   - Enemy
+  - Building
+  - Item
+  - Bush
+  - Ruins
   layers:
   - Default
   - TransparentFX
