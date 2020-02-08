@@ -4,21 +4,34 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
+    //Tile States
+    public bool walkable = true;
     public bool current = false;
     public bool target = false;
     public bool selectable = false;
-    public bool walkable = true;
     
 
-    public HashSet<Tile> adjacencyTiles = new HashSet<Tile>();
-    public HashSet<Tile> attackTiles = new HashSet<Tile>();
+    public List<Tile> adjacentTiles = new List<Tile>();
+
+    //BFS for optimized pathfinding
     public bool visited = false;
+    public Tile parent = null;
+    public int distance = 0;
+
+    private Tile tmpTile;
     
+    //Raytracing to detect objects above
+    private RaycastHit hit;
+
+    //A*
+    public float f = 0;
+    public float g = 0;
+    public float h = 0;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        //GetAdjacentTiles();
     }
 
     // Update is called once per frame
@@ -27,40 +40,56 @@ public class Tile : MonoBehaviour
         if(current) {
             GetComponent<Renderer>().material.color = Color.magenta;
         }
-        else if (selectable) {
+        else if (target) {
             GetComponent<Renderer>().material.color = Color.green;
         }
-        else if (target) {
+        else if (selectable) {
             GetComponent<Renderer>().material.color = Color.red;
+        }
+        else if (walkable){
+            GetComponent<Renderer>().material.color = Color.gray;
         }
         else {
             GetComponent<Renderer>().material.color = Color.white;
         }
     }
 
-    private void GetAdjacentTilesInDirection(Vector3 direction, int movementCost, int attackRange) {
+    public void Reset(){
+        adjacentTiles.Clear();
+        current = false;
+        target = false;
+        selectable = false;
+
+        visited = false;
+        parent = null;
+        distance = 0;
+
+        f = g = h = 0;
+    }
+
+    private void GetAdjacentTilesInDirection(Vector3 direction, Tile target) {
         Collider[] frontColliders = Physics.OverlapBox(transform.position + direction * 2.0f, transform.localScale * 0.1f);
         foreach(Collider c in frontColliders) {
-            if(c.transform.tag == "Tile"){
-                c.GetComponent<Tile>().selectable = true;
-                adjacencyTiles.Add(c.GetComponent<Tile>());
-                c.GetComponent<Tile>().GetMovementTiles(movementCost - 1, attackRange); 
+            Tile tmpTile = c.GetComponent<Tile>();
+            if (tmpTile != null && tmpTile.walkable) {
+                if (!Physics.Raycast(tmpTile.transform.position, Vector3.up, out hit, 1) || (tmpTile == target)) {
+                    adjacentTiles.Add(tmpTile);
+                }
             }
         }
     }
 
-    public void GetMovementTiles(int movementCost,int attackRange){
-        //Frente
-        if (movementCost == 0) {
-            GetAttackTiles(attackRange);
-            return;
-        }       
-        GetAdjacentTilesInDirection(Vector3.forward,movementCost, attackRange);
-        GetAdjacentTilesInDirection(Vector3.back,movementCost, attackRange);
-        GetAdjacentTilesInDirection(Vector3.left,movementCost, attackRange);
-        GetAdjacentTilesInDirection(Vector3.right,movementCost, attackRange);
+    public void GetAdjacentTiles(Tile target){
+
+        Reset();
+        GetAdjacentTilesInDirection(Vector3.forward,target);
+        GetAdjacentTilesInDirection(Vector3.back,target);
+        GetAdjacentTilesInDirection(Vector3.left,target);
+        GetAdjacentTilesInDirection(Vector3.right,target);
     }
 
+
+    /*
     public void GetAttackTiles(int attackRange) {
         if (attackRange == 0) {
             return;
