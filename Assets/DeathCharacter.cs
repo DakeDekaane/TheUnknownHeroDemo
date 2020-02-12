@@ -19,7 +19,15 @@ public class DeathCharacter : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        if(animator.transform.tag == "Enemy") {
+            TurnManager.instance.enemies--;
+        }
+        if(animator.transform.tag == "Player") {
+            TurnManager.instance.players--;
+        }
         Destroy(animator.gameObject);
+        TurnManager.instance.CheckForEnd();
+
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

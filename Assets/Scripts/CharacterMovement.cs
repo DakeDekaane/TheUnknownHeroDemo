@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 public enum CharacterState {
     Idle,
+    Selected,
     StandbyPhase1,
     Move,
     Attack,
@@ -17,6 +18,7 @@ public class CharacterMovement : MonoBehaviour
 
     public GameObject target;
     public bool turn = false;
+    public bool selected = false;
 
     public CharacterState characterState = CharacterState.Idle;
 
@@ -51,8 +53,6 @@ public class CharacterMovement : MonoBehaviour
         characterAgent = GetComponent<NavMeshAgent>();
 
         tiles = GameObject.FindGameObjectsWithTag("Tile");
-
-        TurnManager.AddUnit(this);
     }
 
     public void GetCurrentTile() {
@@ -248,6 +248,10 @@ public class CharacterMovement : MonoBehaviour
             closedList.Add(tmpTile);
             if(tmpTile == target) {
                 actualTargetTile = FindEndTile(tmpTile);
+                if (actualTargetTile.GetTerrain() == "Enemy") {
+                    characterState = CharacterState.End;
+                    return;
+                }
                 MoveToTile(actualTargetTile);
                 return;
             }

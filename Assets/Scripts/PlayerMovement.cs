@@ -8,7 +8,8 @@ public class PlayerMovement : CharacterMovement
     Ray viewRay;
     RaycastHit viewHit;
 
-    public GameObject actionUIManager;
+    public ActionUIManager actionUIManager;
+
 
     void Start() {
         Init();
@@ -27,19 +28,22 @@ public class PlayerMovement : CharacterMovement
         if(!turn) { 
             return;
         }
-
-        if( characterState == CharacterState.Idle ) {
-            FindAttackableTiles();
-            if(Input.GetMouseButtonDown(0)) {
-                PickPlayer();
-            }
+        if(!selected) {
+            return;
         }
-        else if( characterState == CharacterState.StandbyPhase1 ) {
+
+        if( characterState == CharacterState.Idle) {
+            FindAttackableTiles();
+            
+        }
+        if( characterState == CharacterState.StandbyPhase1 ) {
+            selected = true;
             ClearAttackableTiles();
             GetCurrentTile();
             FindSelectableTiles();
             if(Input.GetMouseButtonDown(0)) {
                 if (selectableTiles.Count > 0){
+                    TurnManager.instance.CollidersEnabled(false);
                     Move();
                 }
             }
@@ -57,6 +61,7 @@ public class PlayerMovement : CharacterMovement
         else if (characterState == CharacterState.StandbyPhase2) {
             FindAttackableTiles();
             if(Input.GetMouseButton(0)) {
+                TurnManager.instance.CollidersEnabled(true);
                 if(attackableTiles.Count > 0) {
                     Attack();
                 }
@@ -64,23 +69,14 @@ public class PlayerMovement : CharacterMovement
         }
         else if (characterState == CharacterState.End){
             ClearAttackableTiles();
-            actionUIManager.GetComponent<ActionUIManager>().activePlayer = null; 
+            actionUIManager.activePlayer = null; 
+            TurnManager.instance.activePlayer = null;
+            selected = false;
             characterState = CharacterState.Idle;
-            TurnManager.EndTurn();
+            TurnManager.instance.EndTurn(this);
         }
     }
-    void PickPlayer() {
-        viewRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(viewRay, out viewHit)) {
-            if (viewHit.transform.tag == "Player") {
-                actionUIManager.GetComponent<ActionUIManager>().activePlayer = this;  
-                Debug.Log("Player Selected");
-                viewHit.transform.GetComponent<PlayerMovement>().GetCurrentTile();
-                //characterState = CharacterState.StandbyPhase1;
-                //FindSelectableTiles();
-            }
-        }  
-    }
+    
 
     void Move() {
         viewRay = Camera.main.ScreenPointToRay(Input.mousePosition);

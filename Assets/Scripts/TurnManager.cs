@@ -4,64 +4,186 @@ using UnityEngine;
 
 public class TurnManager : MonoBehaviour
 {
-    static Dictionary<string,List<CharacterMovement>> units =  new Dictionary<string,List<CharacterMovement>>();
-    static Queue<string> turnKey = new Queue<string>();
-    static Queue<CharacterMovement> turnTeam = new Queue<CharacterMovement>();
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+    public enum Faction {
+        Player,
+        Ally,
+        Enemy
     }
 
+    public  GameObject[] playerChars; //
+    public  GameObject[] alliesChars; //
+    public  GameObject[] enemyChars; //
+
+    public  List<CharacterMovement> playerList = new List<CharacterMovement>(); //
+    public  List<CharacterMovement> alliesList = new List<CharacterMovement>(); //
+    public  List<CharacterMovement> enemyList = new List<CharacterMovement>(); //
+
+    public  List<CharacterMovement> turnList = new List<CharacterMovement>(); //
+    public  Faction turnTeam = Faction.Player; //
+    public  bool Allies;
+
+    public PlayerMovement activePlayer = null; //
+
+    public static TurnManager instance;
+
+    public GameObject playerTurnPanel;
+    public GameObject enemyTurnPanel;
+    public GameObject VictoryPanel;
+    public GameObject DefeatPanel;
+
+    public int enemies;
+    public int players;
+
+    void Start() {
+        instance = this;
+        activePlayer = null;
+    }
     // Update is called once per frame
     void Update()
     {
-        if(turnTeam.Count == 0) {
-            InitTeamTurnQueue();
+        if(turnList.Count == 0) {
+            if(turnTeam == Faction.Player) {
+                enemyTurnPanel.SetActive(false);
+                playerTurnPanel.SetActive(true);
+                InitTeamTurn(playerList);
+            }
+            else if(turnTeam == Faction.Ally) {
+                InitTeamTurn(alliesList);
+            }
+            else if(turnTeam == Faction.Enemy) {
+                enemyTurnPanel.SetActive(true);
+                playerTurnPanel.SetActive(false);
+                InitTeamTurn(enemyList);
+            }
+        }
+        if(turnTeam == Faction.Player && (activePlayer == null || !activePlayer.selected)) {
+            if(Input.GetMouseButtonDown(0)) {
+                PickPlayer();
+            }
         }
     }
 
-    static void InitTeamTurnQueue() {
-        List<CharacterMovement> teamlist = units[turnKey.Peek()];
+    public void CollidersEnabled(bool enabled) {
+        foreach(GameObject unit in TurnManager.instance.playerChars) {
+            if(unit != null)
+                unit.GetComponent<Collider>().enabled = enabled;
+        }
+        foreach(GameObject unit in TurnManager.instance.enemyChars) {
+            if(unit != null)
+                unit.GetComponent<Collider>().enabled = enabled;
+        }
+    }
+
+    void PickPlayer() {
+        Ray viewRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit viewHit;
+        if (Physics.Raycast(viewRay, out viewHit)) {
+            if (viewHit.transform.tag == "Player") {
+                activePlayer = viewHit.transform.GetComponent<PlayerMovement>();
+                activePlayer.actionUIManager.activePlayer = activePlayer;
+                Debug.Log("Player Selected");
+                activePlayer.GetCurrentTile();
+                //characterState = CharacterState.StandbyPhase1;
+                //FindSelectableTiles();
+            }
+        }  
+    }
+
+     void FillList(List<CharacterMovement> list,GameObject[] array) {
+        list.Clear();
+        foreach(GameObject unit in array) {
+            list.Add(unit.GetComponent<CharacterMovement>());
+        }
+    }
+
+     void InitTeamTurn(List<CharacterMovement> teamlist) {
+        UpdateLists();
         foreach (CharacterMovement unit in teamlist) {
-            turnTeam.Enqueue(unit);
+            if(turnTeam == Faction.Player) {
+                unit.turn = true;
+                unit.selected = false;
+            }
+            turnList.Add(unit);
         }
         StartTurn();
     }
 
-    public static void StartTurn() {
-        if(turnTeam.Count > 0) {
-            turnTeam.Peek().BeginTurn();
-        }
-    }
-
-    public static void EndTurn() {
-        CharacterMovement unit = turnTeam.Dequeue();
-        unit.EndTurn();
-
-        if(turnTeam.Count > 0) {
-            StartTurn();
-        }
-        else {
-            string team = turnKey.Dequeue();
-            turnKey.Enqueue(team);
-            InitTeamTurnQueue();
-        }
-    }
-
-    public static void AddUnit(CharacterMovement unit) {
-        List<CharacterMovement> list;
-        if(!units.ContainsKey(unit.tag)) {
-            list = new List<CharacterMovement>();
-            units[unit.tag] = list;
-            if(!turnKey.Contains(unit.tag)){
-                turnKey.Enqueue(unit.tag);
+    public  void StartTurn() {
+        if(turnTeam == Faction.Ally || turnTeam == Faction.Enemy) {
+            if(turnList.Count > 0) {
+                turnList[0].BeginTurn();
             }
         }
-        else {
-            list = units[unit.tag];
-        }
-        list.Add(unit);
     }
+
+    public  void EndTurn(CharacterMovement player) {
+        player.EndTurn();
+        turnList.Remove(player);
+        if(turnList.Count == 0) {
+            turnTeam = GetNextTeam();
+        }
+    }
+
+    public  void EndTurn() {
+        CharacterMovement unit = turnList[0];
+        unit.EndTurn();
+        turnList.Remove(unit);
+
+        if(turnList.Count > 0) {
+            turnList[0].BeginTurn();
+        }
+        if(turnList.Count == 0) {
+            turnTeam = GetNextTeam();
+        }
+
+    }
+
+    public void CheckForEnd() {
+        if(players == 0) {
+            DefeatPanel.SetActive(true);
+        }
+        else if (enemies == 0) {
+            VictoryPanel.SetActive(true);
+        }
+    }
+
+     Faction GetNextTeam() {
+        if(turnList.Count == 0) {
+            if(turnTeam == Faction.Player) {
+                if(Allies) {
+                    return Faction.Ally;
+                }
+                else {
+                    return Faction.Enemy;
+                }
+            }
+            else if (turnTeam == Faction.Ally) {
+                return Faction.Enemy;
+            }
+            else if(turnTeam == Faction.Enemy) {
+                return Faction.Player;
+            }
+        }
+        return turnTeam;  
+    }
+
+    void UpdateArrays() {
+        playerChars = GameObject.FindGameObjectsWithTag("Player");
+        if(Allies) {
+            alliesChars = GameObject.FindGameObjectsWithTag("Ally");
+        }
+        enemyChars = GameObject.FindGameObjectsWithTag("Enemy");
+        players = playerChars.Length;
+        enemies = enemyChars.Length;
+    }
+
+     void UpdateLists(){
+        UpdateArrays();
+        FillList(playerList,playerChars);
+        if(Allies) {
+            FillList(alliesList,alliesChars);
+        }
+        FillList(enemyList,enemyChars);
+    }
+
 }

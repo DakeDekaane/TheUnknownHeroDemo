@@ -550,7 +550,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.44, y: 1.15, z: 0.44}
+  m_Size: {x: 1, y: 1.15, z: 1}
   m_Center: {x: 0, y: 0.57, z: 0}
 --- !u!114 &7065329064108048785
 MonoBehaviour:
@@ -564,6 +564,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48040db7dbb5e1049832626e1f0b15c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  characterName: 
+  characterClass: 
   maxHealth: 20
   baseAtk: 5
   baseDef: 5
@@ -572,13 +574,11 @@ MonoBehaviour:
   currentAtk: 0
   currentDef: 0
   currentAccuracy: 0
-  HPLabel: {fileID: 0}
-  atkLabel: {fileID: 0}
-  defLabel: {fileID: 0}
   HPBar: {fileID: 1743645388606739992}
   highHealth: {r: 0.2509804, g: 1, b: 0, a: 1}
   lowHealth: {r: 1, g: 0.2509804, b: 0, a: 0}
   minHealthValue: 0.25
+  cameraOrientation: {fileID: 0}
 --- !u!114 &114199638080012098
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -591,13 +591,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfc7b01e3615d3d49a50fe87d6ab8aec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  target: {fileID: 0}
   turn: 0
+  selected: 0
   characterState: 0
+  selectableTiles: []
+  attackableTiles: []
   movementCost: 4
   attackRange: 1
   moveSpeed: 2
   actualTargetTile: {fileID: 0}
-  tolerance: {x: 0, y: 0, z: 0}
 --- !u!1 &7537844219134861745
 GameObject:
   m_ObjectHideFlags: 0

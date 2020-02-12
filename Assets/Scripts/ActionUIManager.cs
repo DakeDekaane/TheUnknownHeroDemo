@@ -45,12 +45,14 @@ public class ActionUIManager : MonoBehaviour
     }
     public void Move() {
         if(activePlayer.characterState == CharacterState.Idle) {
+            activePlayer.selected = true;
             activePlayer.characterState = CharacterState.StandbyPhase1;
         }
     }
 
     public void Attack() {
         if(activePlayer.characterState == CharacterState.Idle || activePlayer.characterState == CharacterState.StandbyPhase2) {
+            activePlayer.selected = true;
             activePlayer.characterState = CharacterState.StandbyPhase2;
             activePlayer.ShowAttackableTiles();
         }
@@ -60,6 +62,7 @@ public class ActionUIManager : MonoBehaviour
     public void Wait() {
         if(activePlayer.characterState == CharacterState.Idle || activePlayer.characterState == CharacterState.StandbyPhase1 || activePlayer.characterState == CharacterState.StandbyPhase2) {
             activePlayer.characterState = CharacterState.End;
+            //TurnManager.instance.EndTurn(activePlayer);
         }
     }
  }

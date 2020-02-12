@@ -31,6 +31,7 @@ public class EnemyMovement : CharacterMovement
             FindSelectableTiles();
             actualTargetTile.target = true;
             if(!(actualTargetTile.target && actualTargetTile.current)) {
+                TurnManager.instance.CollidersEnabled(false);
                 targetTransform = actualTargetTile.transform;
                 targetTransform.position += new Vector3(0.0f,0.5f,0.0f);
                 Debug.Log("Target: " + targetTransform.position);
@@ -52,19 +53,30 @@ public class EnemyMovement : CharacterMovement
         }
         if(characterState == CharacterState.Move) {
             //Debug.Log("Distance to target: "+ characterAgent.remainingDistance);
-             if (characterAgent.remainingDistance <= 0.37f && characterAgent.hasPath) {
+            if (characterAgent.remainingDistance <= 0.37f && characterAgent.hasPath) {
+                TurnManager.instance.CollidersEnabled(true);
                 characterAgent.isStopped = true;
                 characterAnimator.SetBool("Move", false);
                 ClearSelectableTiles();
-                characterState = CharacterState.Idle;
-                TurnManager.EndTurn();
+                characterState = CharacterState.Attack;
             } 
             if (actualTargetTile.target && actualTargetTile.current) {
                 ClearSelectableTiles();
-                characterState = CharacterState.Idle;
-                TurnManager.EndTurn();
+                characterState = CharacterState.Attack;
             }
             //Move();
+        }
+        if(characterState == CharacterState.Attack) {
+            FindAttackableTiles();
+            if(attackableTiles.Count > 0) {
+                Debug.Log("Pew Pew del enemigo");
+                characterAnimator.SetTrigger("Attack");
+                transform.forward = target.transform.position - transform.position;
+            }
+        }
+        if(characterState == CharacterState.End) {
+            characterState = CharacterState.Idle;
+            TurnManager.instance.EndTurn();
         }
     }
 
