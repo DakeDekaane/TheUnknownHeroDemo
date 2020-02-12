@@ -1,22 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
+
+public enum CharacterState {
+    Idle,
+    StandbyPhase1,
+    Move,
+    Attack,
+    StandbyPhase2,
+    End
+}
 
 public class CharacterMovement : MonoBehaviour
 {
-    public enum CharacterState {
-        Idle,
-        StandbyPhase1,
-        Move,
-        StandbyPhase2,
-        End
-    }
 
+    public GameObject target;
     public bool turn = false;
 
     public CharacterState characterState = CharacterState.Idle;
 
     List<Tile> selectableTiles = new List<Tile>();
+    List<Tile> attackableTiles = new List<Tile>();
     GameObject[] tiles;
 
     Queue<Tile> process = new Queue<Tile>();
@@ -24,6 +29,7 @@ public class CharacterMovement : MonoBehaviour
     
     Tile currentTile;
     public int movementCost = 4;
+    public int attackRange = 1;
     public float moveSpeed = 2;
 
     Vector3 velocity = new Vector3();
@@ -34,22 +40,37 @@ public class CharacterMovement : MonoBehaviour
     protected Tile tmpTile = null;
     Vector3 targetPosition = new Vector3();
     public Tile actualTargetTile;
+
+    protected Animator characterAnimator;
+    protected NavMeshAgent characterAgent;
+    protected Transform targetTransform;
+
     protected void Init() {
+
+        characterAnimator = GetComponent<Animator>();
+        characterAgent = GetComponent<NavMeshAgent>();
+
         tiles = GameObject.FindGameObjectsWithTag("Tile");
 
         TurnManager.AddUnit(this);
     }
 
     public void GetCurrentTile() {
-        currentTile = GetTargetTile(gameObject);
+        currentTile = GetTargetTile(this.gameObject);
         currentTile.current = true;
     }
 
     public Tile GetTargetTile(GameObject target) {
 
         tmpTile = null;
-        if(Physics.Raycast(target.transform.position, Vector3.down, out hit, 1.0f)){
+
+        if(Physics.Raycast(target.transform.position + new Vector3(0.0f,1.0f,0.0f), Vector3.down, out hit, 3.0f)){
+            //Debug.Log("Current Tile: " + hit.transform.tag);
             tmpTile = hit.transform.GetComponent<Tile>();
+        }
+        else {
+            Debug.Log("No encontré nada xd");
+            
         }
         return tmpTile;
     }
@@ -58,6 +79,13 @@ public class CharacterMovement : MonoBehaviour
         foreach(GameObject tile in tiles) {
             tmpTile = tile.GetComponent<Tile>();
             tmpTile.GetAdjacentTiles(target);
+        }
+    }
+
+    public void ComputeAttackableTiles(Tile target) {
+        foreach(GameObject tile in tiles) {
+            tmpTile = tile.GetComponent<Tile>();
+            tmpTile.GetAttackableTiles(target);
         }
     }
 
@@ -85,10 +113,34 @@ public class CharacterMovement : MonoBehaviour
         }
     }
 
+    public void FindAttackableTiles(){
+        ComputeAttackableTiles(null);
+        GetCurrentTile();
+        process.Enqueue(currentTile);
+        currentTile.visited = true;
+        //currentTile.parent = null;
+        
+        while(process.Count > 0) {
+            tmpTile = process.Dequeue();
+            attackableTiles.Add(tmpTile);
+            tmpTile.attackable = true;
+            if(tmpTile.distance < attackRange) {
+                foreach(Tile tile in tmpTile.adjacentTiles) {
+                    if(!tile.visited) {
+                        tile.parent = tmpTile;
+                        tile.visited = true;
+                        tile.distance = tmpTile.distance + 1;
+                        process.Enqueue(tile);
+                    }
+                }
+            }          
+        }
+    }
+
     public void MoveToTile(Tile tile) {
         path.Clear();
         tile.target = true;
-
+        characterState = CharacterState.Move;
         Tile next = tile;
         while(next != null) {
             path.Push(next);
@@ -96,7 +148,7 @@ public class CharacterMovement : MonoBehaviour
         }
     }
 
-    public void Move(){
+    /*public void Move(){
         if (path.Count > 0) {
             tmpTile = path.Peek();
             targetPosition = tmpTile.transform.position;
@@ -119,7 +171,7 @@ public class CharacterMovement : MonoBehaviour
             characterState = CharacterState.Idle;
             TurnManager.EndTurn();
         }
-    }
+}*/
 
     protected void ClearSelectableTiles(){
         if(currentTile != null) {
@@ -130,6 +182,17 @@ public class CharacterMovement : MonoBehaviour
             tile.Reset();
         }
         selectableTiles.Clear();
+    }
+
+    protected void ClearAttackableTiles(){
+        if(currentTile != null) {
+            currentTile.current = false;
+            currentTile = null;
+        }
+        foreach(Tile tile in attackableTiles) {
+            tile.Reset();
+        }
+        attackableTiles.Clear();
     }
 
     void CalculateHeading(Vector3 target) {
@@ -158,6 +221,7 @@ public class CharacterMovement : MonoBehaviour
         openList.Add(currentTile);
         //currentTile.parent = null;
 
+        Debug.Log(currentTile.transform.position + "," + target.transform.position);
         currentTile.h = Vector3.Distance(currentTile.transform.position, target.transform.position);
         currentTile.f = currentTile.h;
 
@@ -208,6 +272,9 @@ public class CharacterMovement : MonoBehaviour
             tmpPath.Push(next);
             next = next.parent;
         }
+        for (int i = 1; i < attackRange; i++) {
+            tmpPath.Pop();
+        }
 
         if(tmpPath.Count <= movementCost) {
             return target.parent;
@@ -234,4 +301,15 @@ public class CharacterMovement : MonoBehaviour
 
         return lowest;
     }
+
+    protected void CheckDead(){
+        if (GetComponent<CharacterStats>().currentHealth == 0) {
+            Debug.Log("I'm dead");
+            characterAnimator.SetTrigger("Death");
+        }
+        if(characterAnimator.GetCurrentAnimatorStateInfo(0).IsName("Destroy")) {
+            Destroy(this.gameObject);
+        }
+    }
 }
+

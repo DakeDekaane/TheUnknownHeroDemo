@@ -8,7 +8,10 @@ public class PlayerMovement : CharacterMovement
     Ray viewRay;
     RaycastHit viewHit;
 
+    public GameObject actionPanel;
+
     void Start() {
+        actionPanel.SetActive(false);
         Init();
     }
 
@@ -16,41 +19,98 @@ public class PlayerMovement : CharacterMovement
     void Update() {
 
         Debug.DrawRay(transform.position,transform.forward);
+        Debug.DrawRay(transform.position + new Vector3(0.0f,0.5f,0.0f),-transform.up);
 
-        if(!turn) {
+        CheckDead();
+
+        if(!turn) { 
             return;
         }
 
-        if(Input.GetMouseButtonDown(0)) {
-            viewRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(viewRay, out viewHit)) {
-                if (characterState == CharacterState.Idle && viewHit.transform.tag == "Player") {
-                    Debug.Log("Player Selected");
-                    characterState = CharacterState.StandbyPhase1;
-                    FindSelectableTiles();
-                }
-            } 
+        if( characterState == CharacterState.Idle ) {
+            if(Input.GetMouseButtonDown(0)) {
+                PickPlayer();
+            }
         }
-        if(Input.GetMouseButtonDown(1)) {
-            viewRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(viewRay, out viewHit)) {
-                if (characterState == CharacterState.StandbyPhase1 && viewHit.transform.tag == "Tile") {
-                    Debug.Log("Destiny Tile Selected");
-                    tmpTile = viewHit.transform.GetComponent<Tile>();
-                    if(tmpTile.selectable) {
-                        MoveToTile(tmpTile);
-                        characterState = CharacterState.Move;
-                    }
-                    
-                }
-                else if (characterState == CharacterState.StandbyPhase1 && viewHit.transform.tag == "Enemy") {
-                    Debug.Log("Enemy Selected");
-                    characterState = CharacterState.Idle;
-                }
-            } 
+        else if( characterState == CharacterState.StandbyPhase1 ) {
+            if(Input.GetMouseButtonDown(0)) {
+                Move();
+            }
+        }     
+        else if (characterState == CharacterState.Move) {
+            if (characterAgent.remainingDistance <= 0.37f && characterAgent.hasPath) {
+                StopMove();
+                //TurnManager.EndTurn();
+            }
         }
-        if(characterState == CharacterState.Move) {
-            Move();
+        else if (characterState == CharacterState.StandbyPhase2) {
+            if(Input.GetMouseButton(0)) {
+                Attack();
+            }
+        }
+        else if (characterState == CharacterState.End){
+            actionPanel.SetActive(true);
+            ClearAttackableTiles();
+            characterState = CharacterState.Idle;
+            TurnManager.EndTurn();
+        }
+    }
+    void PickPlayer() {
+        viewRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(viewRay, out viewHit)) {
+            if (viewHit.transform.tag == "Player") {
+                actionPanel.GetComponent<ActionUIManager>().activePlayer = this;  
+                Debug.Log("Player Selected");
+                viewHit.transform.GetComponent<PlayerMovement>().GetCurrentTile();
+                //characterState = CharacterState.StandbyPhase1;
+                //FindSelectableTiles();
+            }
+        }  
+    }
+
+    void Move() {
+        viewRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(viewRay, out viewHit)) {
+            if (viewHit.transform.tag == "Tile") {
+                Debug.Log("Destiny Tile Selected");
+                tmpTile = viewHit.transform.GetComponent<Tile>();
+                if(tmpTile.selectable) {
+                    actionPanel.SetActive(false);
+                    targetTransform = tmpTile.transform;
+                    targetTransform.position += new Vector3(0.0f,0.5f,0.0f);
+                    Debug.Log("Target: " + targetTransform.position);
+                    characterAgent.SetDestination(targetTransform.position);
+                    characterAgent.isStopped = false;
+                    characterAnimator.SetBool("Move",true);
+
+                    //MoveToTile(tmpTile);
+                    characterState = CharacterState.Move;
+                    tmpTile.target = true;
+                }
+            }
+        } 
+    }
+
+    void StopMove() {
+        characterAgent.isStopped = true;
+        characterAnimator.SetBool("Move", false);
+        ClearSelectableTiles();
+        characterState = CharacterState.StandbyPhase2;
+    }
+
+
+
+    void Attack(){
+        viewRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(viewRay, out viewHit)) {
+            if (viewHit.transform.tag == "Enemy") {
+                characterState = CharacterState.Attack;
+                Debug.Log("Pew Pew");
+                characterAnimator.SetTrigger("Attack");
+                target = viewHit.transform.gameObject;
+                transform.forward = target.transform.position - transform.position;
+                //FindSelectableTiles();
+            }
         }
     }
 }
