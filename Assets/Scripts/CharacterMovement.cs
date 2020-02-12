@@ -20,8 +20,8 @@ public class CharacterMovement : MonoBehaviour
 
     public CharacterState characterState = CharacterState.Idle;
 
-    List<Tile> selectableTiles = new List<Tile>();
-    List<Tile> attackableTiles = new List<Tile>();
+    public List<Tile> selectableTiles = new List<Tile>();
+    public List<Tile> attackableTiles = new List<Tile>();
     GameObject[] tiles;
 
     Queue<Tile> process = new Queue<Tile>();
@@ -82,14 +82,17 @@ public class CharacterMovement : MonoBehaviour
         }
     }
 
-    public void ComputeAttackableTiles(Tile target) {
+    public void ComputeAttackableTiles() {
         foreach(GameObject tile in tiles) {
             tmpTile = tile.GetComponent<Tile>();
-            tmpTile.GetAttackableTiles(target);
+            tmpTile.GetAttackableTiles();
         }
     }
 
     public void FindSelectableTiles(){
+        if (selectableTiles.Count > 0) {
+            return;
+        }
         ComputeAdjacentTiles(null);
         GetCurrentTile();
         process.Enqueue(currentTile);
@@ -113,8 +116,16 @@ public class CharacterMovement : MonoBehaviour
         }
     }
 
+    public void ShowAttackableTiles() {
+        foreach(Tile tile in attackableTiles) {
+            tile.attackable = true;
+        }
+    }
     public void FindAttackableTiles(){
-        ComputeAttackableTiles(null);
+        if (attackableTiles.Count > 0) {
+            return;
+        }
+        ComputeAttackableTiles();
         GetCurrentTile();
         process.Enqueue(currentTile);
         currentTile.visited = true;
@@ -123,9 +134,9 @@ public class CharacterMovement : MonoBehaviour
         while(process.Count > 0) {
             tmpTile = process.Dequeue();
             attackableTiles.Add(tmpTile);
-            tmpTile.attackable = true;
+            //tmpTile.attackable = true;
             if(tmpTile.distance < attackRange) {
-                foreach(Tile tile in tmpTile.adjacentTiles) {
+                foreach(Tile tile in tmpTile.attackableTiles) {
                     if(!tile.visited) {
                         tile.parent = tmpTile;
                         tile.visited = true;
@@ -134,6 +145,13 @@ public class CharacterMovement : MonoBehaviour
                     }
                 }
             }          
+        }
+        for(int i = attackableTiles.Count - 1; i >= 0 ;i--) {
+            if(attackableTiles[i].GetTerrain() != "Enemy") {
+                Debug.Log("Not enemy in " + i);
+                //attackableTiles[i].attackable = false;
+                attackableTiles.RemoveAt(i);
+            }
         }
     }
 
@@ -303,12 +321,9 @@ public class CharacterMovement : MonoBehaviour
     }
 
     protected void CheckDead(){
-        if (GetComponent<CharacterStats>().currentHealth == 0) {
+        if (GetComponent<CharacterStats>().currentHealth <= 0) {
             Debug.Log("I'm dead");
             characterAnimator.SetTrigger("Death");
-        }
-        if(characterAnimator.GetCurrentAnimatorStateInfo(0).IsName("Destroy")) {
-            Destroy(this.gameObject);
         }
     }
 }

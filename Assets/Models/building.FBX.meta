@@ -43,7 +43,37 @@ ModelImporter:
     4300010: Soil
     7400000: Take 001
     9500000: //RootNode
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BlackWalls
+    second: {fileID: 2100000, guid: a621f8fa159086c4bb91d77c77a7eb44, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: GrassGreen
+    second: {fileID: 2100000, guid: d5bd382bdf82a2e4db8e82d41b2aa5a3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: GrayWalls
+    second: {fileID: 2100000, guid: 9b33dff598bd4164fa483f73758fdd59, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: LeafGreen
+    second: {fileID: 2100000, guid: 054e8b738d65b0742a57823c78d92508, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: SmokedGlass
+    second: {fileID: 2100000, guid: 363e684a87e0e4f4390061b80cfd92a9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Wood
+    second: {fileID: 2100000, guid: e8f63deefad542346b4f268aedec2062, type: 2}
   materials:
     importMaterials: 1
     materialName: 0

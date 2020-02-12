@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GunShootEvent : StateMachineBehaviour
+public class DeathCharacter : StateMachineBehaviour
 {
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     //override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -19,8 +19,7 @@ public class GunShootEvent : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        animator.gameObject.transform.GetComponent<CharacterMovement>().characterState = CharacterState.End;
-        animator.gameObject.transform.GetComponent<CharacterStats>().Attack(animator.gameObject.transform.GetComponent<CharacterMovement>().target.GetComponent<CharacterStats>());
+        Destroy(animator.gameObject);
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

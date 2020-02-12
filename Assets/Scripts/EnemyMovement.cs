@@ -6,8 +6,10 @@ public class EnemyMovement : CharacterMovement
 {
     // Start is called before the first frame update
     void Start()
-    {
+    { 
         Init();
+        characterAnimator.SetBool("HasGun",true);
+        characterAnimator.SetBool("HasKnife",false);
     }
 
     // Update is called once per frame
@@ -28,13 +30,16 @@ public class EnemyMovement : CharacterMovement
             CalculatePath();
             FindSelectableTiles();
             actualTargetTile.target = true;
+            if(!(actualTargetTile.target && actualTargetTile.current)) {
+                targetTransform = actualTargetTile.transform;
+                targetTransform.position += new Vector3(0.0f,0.5f,0.0f);
+                Debug.Log("Target: " + targetTransform.position);
+                characterAgent.SetDestination(targetTransform.position);
+                characterAgent.isStopped = false;
+                characterAnimator.SetBool("Move",true);
+            }
 
-            targetTransform = actualTargetTile.transform;
-            targetTransform.position += new Vector3(0.0f,0.5f,0.0f);
-            Debug.Log("Target: " + targetTransform.position);
-            characterAgent.SetDestination(targetTransform.position);
-            characterAgent.isStopped = false;
-            characterAnimator.SetBool("Move",true);
+            
 
             //target.transform.GetComponent<Tile>().target = true;
             // characterState = CharacterState.Move;
@@ -54,6 +59,11 @@ public class EnemyMovement : CharacterMovement
                 characterState = CharacterState.Idle;
                 TurnManager.EndTurn();
             } 
+            if (actualTargetTile.target && actualTargetTile.current) {
+                ClearSelectableTiles();
+                characterState = CharacterState.Idle;
+                TurnManager.EndTurn();
+            }
             //Move();
         }
     }

@@ -307,7 +307,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 09445d84d707a62478cc547bf9274052, type: 3}
+  - {fileID: 2100000, guid: cac0195a276cbd241b0fe8270730ccbd, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -452,14 +452,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a90516e55a7c0cd4eb55feb52f1ef577, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  target: {fileID: 0}
   turn: 0
   characterState: 0
+  selectableTiles: []
+  attackableTiles: []
   movementCost: 4
   attackRange: 1
   moveSpeed: 2
   actualTargetTile: {fileID: 0}
-  tolerance: {x: 0, y: 0, z: 0}
   distance: 50
+  actionUIManager: {fileID: 0}
 --- !u!114 &114555179306488522
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -472,6 +475,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48040db7dbb5e1049832626e1f0b15c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  characterName: 
+  characterClass: 
   maxHealth: 20
   baseAtk: 5
   baseDef: 5
@@ -480,13 +485,11 @@ MonoBehaviour:
   currentAtk: 0
   currentDef: 0
   currentAccuracy: 0
-  HPLabel: {fileID: 0}
-  atkLabel: {fileID: 0}
-  defLabel: {fileID: 0}
   HPBar: {fileID: 5211057433181104222}
-  highHealth: {r: 0.2509804, g: 1, b: 0, a: 0}
-  lowHealth: {r: 1, g: 0.2509804, b: 0, a: 0}
+  highHealth: {r: 0.2509804, g: 1, b: 0, a: 1}
+  lowHealth: {r: 1, g: 0.2509804, b: 0, a: 1}
   minHealthValue: 0.25
+  cameraOrientation: {fileID: 0}
 --- !u!65 &4647162062894592237
 BoxCollider:
   m_ObjectHideFlags: 0

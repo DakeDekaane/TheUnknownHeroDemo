@@ -33,7 +33,37 @@ ModelImporter:
     4300006: Soil
     7400000: Take 001
     9500000: //RootNode
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BlackWalls
+    second: {fileID: 2100000, guid: 977ff5b1eaf072144ae31cfbeee44023, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: GrassGreen
+    second: {fileID: 2100000, guid: d5bd382bdf82a2e4db8e82d41b2aa5a3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: GrayWalls
+    second: {fileID: 2100000, guid: fb183a07124c72c4986cd73cdf302702, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 'Material #188'
+    second: {fileID: 2100000, guid: b0206e2bd405eb0419512344b06f03af, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: SmokedGlass
+    second: {fileID: 2100000, guid: 363e684a87e0e4f4390061b80cfd92a9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Wood
+    second: {fileID: 2100000, guid: e8f63deefad542346b4f268aedec2062, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
@@ -85,7 +115,7 @@ ModelImporter:
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 0.0254
+    previousCalculatedGlobalScale: 0.008466666
     hasPreviousCalculatedGlobalScale: 1
   tangentSpace:
     normalSmoothAngle: 60

@@ -58,14 +58,19 @@ public class CharacterStats : MonoBehaviour
                 damage = 0;
             }
             enemy.GetDamage(damage);
+            enemy.GetComponent<Animator>().SetTrigger("GetDamage");
         }
         else{
             Debug.Log("Miss");
+            enemy.GetComponent<Animator>().SetTrigger("Dodge");
         }
     }
 
     void GetDamage(int damage) {
         currentHealth -= damage;
+        if(currentHealth < 0 ){
+            currentHealth = 0;
+        }
         HPBar.fillAmount = currentHealth/maxHealth;
         if (currentHealth/maxHealth < minHealthValue) {
             HPBar.color = lowHealth;

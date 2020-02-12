@@ -14,6 +14,7 @@ public class Tile : MonoBehaviour
     
 
     public List<Tile> adjacentTiles = new List<Tile>();
+    public List<Tile> attackableTiles = new List<Tile>();
 
     //BFS for optimized pathfinding
     public bool visited = false;
@@ -63,6 +64,7 @@ public class Tile : MonoBehaviour
 
     public void Reset(){
         adjacentTiles.Clear();
+        attackableTiles.Clear();
         current = false;
         target = false;
         selectable = false;
@@ -87,13 +89,15 @@ public class Tile : MonoBehaviour
         }
     }
 
-    private void GetAttackableTilesInDirection(Vector3 direction, Tile target) {
+    private void GetAttackableTilesInDirection(Vector3 direction) {
         Collider[] frontColliders = Physics.OverlapBox(transform.position + direction * 2.0f, transform.localScale * 0.1f);
         foreach(Collider c in frontColliders) {
-            Tile tmpTile = c.GetComponent<Tile>();        
+            Tile tmpTile = c.GetComponent<Tile>();
             if (tmpTile != null && tmpTile.walkable) {
-                adjacentTiles.Add(tmpTile);
-                
+                //if (GetTerrain() == "Enemy") {
+                //    Debug.Log("Enemy in range!");
+                    attackableTiles.Add(tmpTile);
+                //}
             }
         }
     }
@@ -106,18 +110,22 @@ public class Tile : MonoBehaviour
         GetAdjacentTilesInDirection(Vector3.right,target);
     }
 
-    public void GetAttackableTiles(Tile target){
+    public void GetAttackableTiles(){
         Reset();
-        GetAttackableTilesInDirection(Vector3.forward,target);
-        GetAttackableTilesInDirection(Vector3.back,target);
-        GetAttackableTilesInDirection(Vector3.left,target);
-        GetAttackableTilesInDirection(Vector3.right,target);
+        GetAttackableTilesInDirection(Vector3.forward);
+        GetAttackableTilesInDirection(Vector3.back);
+        GetAttackableTilesInDirection(Vector3.left);
+        GetAttackableTilesInDirection(Vector3.right);
     }
 
-    public void GetTerrain() {
+    public string GetTerrain() {
         if (Physics.Raycast(transform.position, Vector3.up, out hit, 1)) {
             Debug.Log("Terrain: " + hit.transform.tag);
+            return hit.transform.tag;
             //adjacentTiles.Add(tmpTile);
+        }
+        else {
+            return null;
         }
     }
 

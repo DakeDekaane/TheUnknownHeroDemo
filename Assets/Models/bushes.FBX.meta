@@ -70,7 +70,22 @@ ModelImporter:
     4300022: Soil
     7400000: Take 001
     9500000: //RootNode
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: GrassGreen
+    second: {fileID: 2100000, guid: a89e19ff9e251ab44a4309d067190e9e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: LeafGreen
+    second: {fileID: 2100000, guid: 948ad22b4601aff4eae0063cc326e7c7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Wood
+    second: {fileID: 2100000, guid: 9f33269d14dd02d49ade274e6399c94b, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
@@ -122,7 +137,7 @@ ModelImporter:
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 0.0254
+    previousCalculatedGlobalScale: 0.008466666
     hasPreviousCalculatedGlobalScale: 1
   tangentSpace:
     normalSmoothAngle: 60

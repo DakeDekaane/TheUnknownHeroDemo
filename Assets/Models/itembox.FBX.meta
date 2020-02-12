@@ -31,7 +31,27 @@ ModelImporter:
     4300006: Cube
     7400000: Take 001
     9500000: //RootNode
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: LeafGreen
+    second: {fileID: 2100000, guid: 054e8b738d65b0742a57823c78d92508, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Leather
+    second: {fileID: 2100000, guid: 0d0338b3cca6ace4ebdd6b85d9eac1a9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rubber_
+    second: {fileID: 2100000, guid: 7189aa1b2d8dd294ab8db263c330e9c3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ShinyGolden
+    second: {fileID: 2100000, guid: e7ec2bb3650ade04b9aa4632aa4da67b, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
@@ -83,7 +103,7 @@ ModelImporter:
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 0.0076200003
+    previousCalculatedGlobalScale: 0.00508
     hasPreviousCalculatedGlobalScale: 1
   tangentSpace:
     normalSmoothAngle: 60

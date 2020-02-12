@@ -8,11 +8,12 @@ public class PlayerMovement : CharacterMovement
     Ray viewRay;
     RaycastHit viewHit;
 
-    public GameObject actionPanel;
+    public GameObject actionUIManager;
 
     void Start() {
-        actionPanel.SetActive(false);
         Init();
+        characterAnimator.SetBool("HasGun",true);
+        characterAnimator.SetBool("HasKnife",false);
     }
 
     // Update is called once per frame
@@ -28,13 +29,19 @@ public class PlayerMovement : CharacterMovement
         }
 
         if( characterState == CharacterState.Idle ) {
+            FindAttackableTiles();
             if(Input.GetMouseButtonDown(0)) {
                 PickPlayer();
             }
         }
         else if( characterState == CharacterState.StandbyPhase1 ) {
+            ClearAttackableTiles();
+            GetCurrentTile();
+            FindSelectableTiles();
             if(Input.GetMouseButtonDown(0)) {
-                Move();
+                if (selectableTiles.Count > 0){
+                    Move();
+                }
             }
         }     
         else if (characterState == CharacterState.Move) {
@@ -42,15 +49,22 @@ public class PlayerMovement : CharacterMovement
                 StopMove();
                 //TurnManager.EndTurn();
             }
+            if (tmpTile.target && tmpTile.current) {
+                ClearSelectableTiles();
+                characterState = CharacterState.StandbyPhase2;
+            }
         }
         else if (characterState == CharacterState.StandbyPhase2) {
+            FindAttackableTiles();
             if(Input.GetMouseButton(0)) {
-                Attack();
+                if(attackableTiles.Count > 0) {
+                    Attack();
+                }
             }
         }
         else if (characterState == CharacterState.End){
-            actionPanel.SetActive(true);
             ClearAttackableTiles();
+            actionUIManager.GetComponent<ActionUIManager>().activePlayer = null; 
             characterState = CharacterState.Idle;
             TurnManager.EndTurn();
         }
@@ -59,7 +73,7 @@ public class PlayerMovement : CharacterMovement
         viewRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(viewRay, out viewHit)) {
             if (viewHit.transform.tag == "Player") {
-                actionPanel.GetComponent<ActionUIManager>().activePlayer = this;  
+                actionUIManager.GetComponent<ActionUIManager>().activePlayer = this;  
                 Debug.Log("Player Selected");
                 viewHit.transform.GetComponent<PlayerMovement>().GetCurrentTile();
                 //characterState = CharacterState.StandbyPhase1;
@@ -75,17 +89,18 @@ public class PlayerMovement : CharacterMovement
                 Debug.Log("Destiny Tile Selected");
                 tmpTile = viewHit.transform.GetComponent<Tile>();
                 if(tmpTile.selectable) {
-                    actionPanel.SetActive(false);
-                    targetTransform = tmpTile.transform;
-                    targetTransform.position += new Vector3(0.0f,0.5f,0.0f);
-                    Debug.Log("Target: " + targetTransform.position);
-                    characterAgent.SetDestination(targetTransform.position);
-                    characterAgent.isStopped = false;
-                    characterAnimator.SetBool("Move",true);
-
+                    tmpTile.target = true;
+                     if(!(tmpTile.target && tmpTile.current)) {
+                        targetTransform = tmpTile.transform;
+                        targetTransform.position += new Vector3(0.0f,0.5f,0.0f);
+                        Debug.Log("Target: " + targetTransform.position);
+                        characterAgent.SetDestination(targetTransform.position);
+                        characterAgent.isStopped = false;
+                        characterAnimator.SetBool("Move",true);
+                    }
                     //MoveToTile(tmpTile);
                     characterState = CharacterState.Move;
-                    tmpTile.target = true;
+                    
                 }
             }
         } 
