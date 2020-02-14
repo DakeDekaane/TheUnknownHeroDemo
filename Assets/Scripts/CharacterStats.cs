@@ -77,7 +77,7 @@ public class CharacterStats : MonoBehaviour
         }
     }
 
-    void Heal(int healAmount) {
+    public void Heal(int healAmount) {
         currentHealth += healAmount;
         HPBar.fillAmount = currentHealth/maxHealth;
         if (currentHealth/maxHealth < minHealthValue) {

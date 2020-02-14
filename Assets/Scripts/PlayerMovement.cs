@@ -10,11 +10,14 @@ public class PlayerMovement : CharacterMovement
 
     public ActionUIManager actionUIManager;
 
+    //public Tile currentTile;
 
     void Start() {
         Init();
         characterAnimator.SetBool("HasGun",true);
         characterAnimator.SetBool("HasKnife",false);
+        audioSource = GetComponent<AudioSource>();
+
     }
 
     // Update is called once per frame
@@ -34,7 +37,7 @@ public class PlayerMovement : CharacterMovement
 
         if( characterState == CharacterState.Idle) {
             FindAttackableTiles();
-            
+            CheckForItem();
         }
         if( characterState == CharacterState.StandbyPhase1 ) {
             selected = true;
@@ -60,6 +63,7 @@ public class PlayerMovement : CharacterMovement
         }
         else if (characterState == CharacterState.StandbyPhase2) {
             FindAttackableTiles();
+            CheckForItem();
             if(Input.GetMouseButton(0)) {
                 TurnManager.instance.CollidersEnabled(true);
                 if(attackableTiles.Count > 0) {
@@ -91,6 +95,7 @@ public class PlayerMovement : CharacterMovement
                         targetTransform.position += new Vector3(0.0f,0.5f,0.0f);
                         Debug.Log("Target: " + targetTransform.position);
                         characterAgent.SetDestination(targetTransform.position);
+                        GetComponentInChildren<ParticleSystem>().Play();
                         characterAgent.isStopped = false;
                         characterAnimator.SetBool("Move",true);
                     }
@@ -105,6 +110,7 @@ public class PlayerMovement : CharacterMovement
     void StopMove() {
         characterAgent.isStopped = true;
         characterAnimator.SetBool("Move", false);
+        GetComponentInChildren<ParticleSystem>().Stop();
         ClearSelectableTiles();
         characterState = CharacterState.StandbyPhase2;
     }
@@ -118,10 +124,22 @@ public class PlayerMovement : CharacterMovement
                 characterState = CharacterState.Attack;
                 Debug.Log("Pew Pew");
                 characterAnimator.SetTrigger("Attack");
+                audioSource.clip = SFX[0];
+                audioSource.time = 0.7f;
+                audioSource.loop = false;
+                audioSource.Play();
                 target = viewHit.transform.gameObject;
                 transform.forward = target.transform.position - transform.position;
                 //FindSelectableTiles();
             }
+        }
+    }
+
+    void CheckForItem(){
+        currentTile = GetCurrentTile();
+        currentTile.GetItemTiles();
+        foreach(Tile tile in currentTile.itemTiles) {
+            tile.attackable = true;
         }
     }
 }

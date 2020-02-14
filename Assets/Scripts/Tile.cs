@@ -6,15 +6,24 @@ public class Tile : MonoBehaviour
 {
     public string terrain;
     //Tile States
+
+    private MeshRenderer meshRenderer;
+    public Material originalMaterial;
+
     public bool walkable = true;
     public bool current = false;
     public bool target = false;
     public bool selectable = false;
     public bool attackable = false;
     
+    public Material currentMaterial;
+    public Material targetMaterial;
+    public Material selectableMaterial;
+    public Material attackableMaterial;
 
     public List<Tile> adjacentTiles = new List<Tile>();
     public List<Tile> attackableTiles = new List<Tile>();
+    public List<Tile> itemTiles = new List<Tile>();
 
     //BFS for optimized pathfinding
     public bool visited = false;
@@ -34,6 +43,7 @@ public class Tile : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        meshRenderer = GetComponent<MeshRenderer>();
         GetTerrain();
         //GetAdjacentTiles();
     }
@@ -41,25 +51,24 @@ public class Tile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.DrawRay(transform.position,Vector3.up);
+        
         if(current) {
-            GetComponent<Renderer>().material.color = Color.magenta;
+            meshRenderer.material = currentMaterial;
         }
         else if (target) {
-            GetComponent<Renderer>().material.color = Color.green;
+            meshRenderer.material = targetMaterial;
         }
         else if (selectable) {
-            GetComponent<Renderer>().material.color = Color.blue;
+            meshRenderer.material = selectableMaterial;
         }
         else if (attackable) {
-            GetComponent<Renderer>().material.color = Color.red;
-        }
-        else if (walkable){
-            GetComponent<Renderer>().material.color = Color.gray;
+            meshRenderer.material = attackableMaterial;
+
         }
         else {
-            GetComponent<Renderer>().material.color = Color.white;
+            meshRenderer.material = originalMaterial;
         }
+        
     }
 
     public void Reset(){
@@ -102,6 +111,17 @@ public class Tile : MonoBehaviour
         }
     }
 
+    private void GetItemTilesInDirection(Vector3 direction) {
+        Collider[] frontColliders = Physics.OverlapBox(transform.position + direction * 2.0f, transform.localScale * 0.1f);
+        foreach(Collider c in frontColliders) {
+            Tile tmpTile = c.GetComponent<Tile>();
+            if (tmpTile != null && tmpTile.GetTerrain() == "Item") {
+                    Debug.Log("Item found!");
+                    itemTiles.Add(tmpTile);
+            }
+        }
+    }
+
     public void GetAdjacentTiles(Tile target){
         Reset();
         GetAdjacentTilesInDirection(Vector3.forward,target);
@@ -118,9 +138,18 @@ public class Tile : MonoBehaviour
         GetAttackableTilesInDirection(Vector3.right);
     }
 
+    public void GetItemTiles(){
+        Reset();
+        GetItemTilesInDirection(Vector3.forward);
+        GetItemTilesInDirection(Vector3.back);
+        GetItemTilesInDirection(Vector3.left);
+        GetItemTilesInDirection(Vector3.right);
+    }
+
     public string GetTerrain() {
         if (Physics.Raycast(transform.position, Vector3.up, out hit, 1)) {
             Debug.Log("Terrain: " + hit.transform.tag);
+            terrain = hit.transform.tag;
             return hit.transform.tag;
             //adjacentTiles.Add(tmpTile);
         }

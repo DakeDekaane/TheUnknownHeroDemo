@@ -26,7 +26,6 @@ public class ActionUIManager : MonoBehaviour
             }
             if(activePlayer.attackableTiles.Count > 0){
                actionPanel.transform.Find("AttackButton").GetComponent<Button>().interactable = true;
-
             }
             else {
                actionPanel.transform.Find("AttackButton").GetComponent<Button>().interactable = false;
@@ -36,6 +35,13 @@ public class ActionUIManager : MonoBehaviour
             }
             if(activePlayer.characterState == CharacterState.StandbyPhase2) {
                actionPanel.transform.Find("MoveButton").GetComponent<Button>().interactable = false;
+            }
+            if(activePlayer.currentTile.itemTiles.Count > 0) {
+               actionPanel.transform.Find("ItemButton").GetComponent<Button>().interactable = true;
+            }
+            else {
+               actionPanel.transform.Find("ItemButton").GetComponent<Button>().interactable = false;
+
             }
         }
         else {
@@ -57,6 +63,14 @@ public class ActionUIManager : MonoBehaviour
             activePlayer.ShowAttackableTiles();
         }
         
+    }
+
+    public void Item() {
+        if(activePlayer.characterState == CharacterState.Idle || activePlayer.characterState == CharacterState.StandbyPhase2) {
+            activePlayer.selected = true;
+            activePlayer.characterState = CharacterState.StandbyPhase2;
+            activePlayer.GetComponent<CharacterStats>().Heal(10);
+        }
     }
 
     public void Wait() {

@@ -29,7 +29,7 @@ public class CharacterMovement : MonoBehaviour
     Queue<Tile> process = new Queue<Tile>();
     Stack<Tile> path = new Stack<Tile>();
     
-    Tile currentTile;
+    public Tile currentTile;
     public int movementCost = 4;
     public int attackRange = 1;
     public float moveSpeed = 2;
@@ -47,6 +47,9 @@ public class CharacterMovement : MonoBehaviour
     protected NavMeshAgent characterAgent;
     protected Transform targetTransform;
 
+    public AudioClip[] SFX;
+    protected AudioSource audioSource;
+
     protected void Init() {
 
         characterAnimator = GetComponent<Animator>();
@@ -55,9 +58,10 @@ public class CharacterMovement : MonoBehaviour
         tiles = GameObject.FindGameObjectsWithTag("Tile");
     }
 
-    public void GetCurrentTile() {
+    public Tile GetCurrentTile() {
         currentTile = GetTargetTile(this.gameObject);
         currentTile.current = true;
+        return currentTile;
     }
 
     public Tile GetTargetTile(GameObject target) {

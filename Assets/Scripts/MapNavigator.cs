@@ -32,7 +32,7 @@ public class MapNavigator : MonoBehaviour
             mouseAngle += 360;
         }
         
-        if ( cam.transform.position.x <= horizontalLimit && cam.transform.position.x >= -horizontalLimit && cam.transform.position.z <= (verticalLimit - 15) && cam.transform.position.z >= -verticalLimit) {
+        if ( cam.transform.position.x <= horizontalLimit && cam.transform.position.x >= -horizontalLimit && cam.transform.position.z <= verticalLimit && cam.transform.position.z >= -verticalLimit) {
             if ( ( (Input.mousePosition.y > Screen.height * (1 - edgeTolerance) || Input.mousePosition.y < Screen.height * edgeTolerance) || 
                 ( Input.mousePosition.x > Screen.width * (1 - edgeTolerance) || Input.mousePosition.x < Screen.width * edgeTolerance) ) ) {
                 cam.transform.Translate(Vector3.right * Time.deltaTime * cameraSpeed * Mathf.Cos(Mathf.Deg2Rad * mouseAngle));
@@ -45,8 +45,8 @@ public class MapNavigator : MonoBehaviour
             if(cam.transform.position.x < -horizontalLimit) {
                 cam.transform.position = new Vector3(-horizontalLimit, cam.transform.position.y, cam.transform.position.z);
             }
-            if(cam.transform.position.z > (verticalLimit - 15)) {
-                cam.transform.position = new Vector3(cam.transform.position.x, cam.transform.position.y,(verticalLimit - 15));
+            if(cam.transform.position.z > verticalLimit) {
+                cam.transform.position = new Vector3(cam.transform.position.x, cam.transform.position.y,verticalLimit);
             }
             if(cam.transform.position.z < -verticalLimit) {
                 cam.transform.position = new Vector3(cam.transform.position.x, cam.transform.position.y,-verticalLimit);

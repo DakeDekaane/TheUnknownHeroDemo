@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2639174633184637469}
   - component: {fileID: 2639174633184637468}
   - component: {fileID: 6408558212059937116}
+  - component: {fileID: 7813904217128474550}
   m_Layer: 0
   m_Name: Tile
   m_TagString: Tile
@@ -104,7 +105,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac79a97f807369b41aa5d81dcc3d64c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  terrain: 
+  highlightMaterial: {fileID: 2100000, guid: 173d0e832359f3345a0acfea4d3ef88c, type: 2}
+  originalMaterial: {fileID: 2100000, guid: c70e1a0a3bad70d45a0ad1d7e40ac060, type: 2}
+  walkable: 1
   current: 0
   target: 0
   selectable: 0
-  adjacencyList: []
+  attackable: 0
+  currentMaterial: {fileID: 2100000, guid: 500a158f239bc4744bef124fedb14e77, type: 2}
+  targetMaterial: {fileID: 2100000, guid: 17ab4dfdb362f8942a82be7788d44c54, type: 2}
+  selectableMaterial: {fileID: 2100000, guid: 173d0e832359f3345a0acfea4d3ef88c, type: 2}
+  attackableMaterial: {fileID: 2100000, guid: b2b8a36339f02d545af539d776bd2f9b, type: 2}
+  adjacentTiles: []
+  attackableTiles: []
+  visited: 0
+  parent: {fileID: 0}
+  distance: 0
+  f: 0
+  g: 0
+  h: 0
+--- !u!114 &7813904217128474550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2639174633184637467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb58c0c67a639aa428c2c1231a9c8bf5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  originalMaterial: {fileID: 2100000, guid: c70e1a0a3bad70d45a0ad1d7e40ac060, type: 2}
+  highlightMaterial: {fileID: 2100000, guid: 173d0e832359f3345a0acfea4d3ef88c, type: 2}
