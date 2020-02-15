@@ -34,7 +34,8 @@ public class TurnManager : MonoBehaviour
     public int enemies;
     public int players;
 
-    public bool holdOn;
+    public bool holdOn = false;
+    public bool pause = false;
 
     void Start() {
         instance = this;

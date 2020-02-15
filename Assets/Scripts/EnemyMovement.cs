@@ -30,7 +30,7 @@ public class EnemyMovement : CharacterMovement
 
         CheckDead();
 
-        if(TurnManager.instance.holdOn) {
+        if(TurnManager.instance.holdOn || TurnManager.instance.pause) {
             return;
         }
 
