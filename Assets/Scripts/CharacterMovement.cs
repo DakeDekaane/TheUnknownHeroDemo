@@ -43,7 +43,7 @@ public class CharacterMovement : MonoBehaviour
     RaycastHit hit;
 
     protected Tile tmpTile = null;
-    Vector3 targetPosition = new Vector3();
+    //Vector3 targetPosition = new Vector3();
     public Tile actualTargetTile;
 
     protected Animator characterAnimator;

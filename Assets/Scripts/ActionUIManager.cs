@@ -76,6 +76,7 @@ public class ActionUIManager : MonoBehaviour
 
     public void Wait() {
         if(activePlayer.characterState == CharacterState.Idle || activePlayer.characterState == CharacterState.Idle2) {
+            activePlayer.selected = true;
             Debug.Log(activePlayer.name + ": IdleX->End");
             activePlayer.characterState = CharacterState.End;
             //TurnManager.instance.EndTurn(activePlayer);
