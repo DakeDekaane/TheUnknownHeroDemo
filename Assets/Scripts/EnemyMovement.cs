@@ -30,17 +30,31 @@ public class EnemyMovement : CharacterMovement
 
         CheckDead();
 
+        if(TurnManager.instance.holdOn) {
+            return;
+        }
+
         if(!turn) {
             return;
         }
 
-        
-        if(characterState == CharacterState.Idle) {
+        if(characterState == CharacterState.Begin) {
+            FindAttackableTiles(this.gameObject.transform.tag);
             FindNearestTarget();
+            if (attackableTiles.Count > 0) {
+                foreach(Tile tile in attackableTiles) {
+                    Debug.Log("Attackables:" + tile.name);
+                }
+                Debug.Log(name + ": Begin->Attack");
+                characterState = CharacterState.Attack;
+                return;
+            }
             CalculatePath();
             FindSelectableTiles();
             actualTargetTile.target = true;
             if(!(actualTargetTile.target && actualTargetTile.current)) {
+                Debug.Log(name + ": Begin->Move");
+                characterState = CharacterState.Move;
                 TurnManager.instance.CollidersEnabled(false);
                 targetTransform = actualTargetTile.transform;
                 targetTransform.position += new Vector3(0.0f,0.5f,0.0f);
@@ -50,25 +64,16 @@ public class EnemyMovement : CharacterMovement
                 characterAgent.isStopped = false;
                 characterAnimator.SetBool("Move",true);
             }
-
-            
-
-            //target.transform.GetComponent<Tile>().target = true;
-            // characterState = CharacterState.Move;
-
-
-
-            //MoveToTile(tmpTile);
-            //characterState = CharacterState.Move;
-            //tmpTile.target = true;
         }
-        if(characterState == CharacterState.Move) {
+        
+        else if(characterState == CharacterState.Move) {
             //Debug.Log("Distance to target: "+ characterAgent.remainingDistance);
             if (characterAgent.remainingDistance <= 0.37f && characterAgent.hasPath) {
                 TurnManager.instance.CollidersEnabled(true);
                 characterAgent.isStopped = true;
                 characterAnimator.SetBool("Move", false);
                 ClearSelectableTiles();
+                Debug.Log(name + ": Move->Attack");
                 characterState = CharacterState.Attack;
                 GetComponentInChildren<ParticleSystem>().Stop();
                 
@@ -80,11 +85,10 @@ public class EnemyMovement : CharacterMovement
             }
             //Move();
         }
-        if(characterState == CharacterState.Attack) {
-            FindAttackableTiles();
+        else if(characterState == CharacterState.Attack) {
+            FindAttackableTiles(this.gameObject.transform.tag);
             if(attackableTiles.Count > 0) {
-                characterState = CharacterState.End;
-                Debug.Log("Pew Pew del enemigo");
+                //Debug.Log("Pew Pew del enemigo");
                 characterAnimator.SetTrigger("Attack");
                 audioSource.clip = SFX[0];
                 //audioSource.time = 0.5f;
@@ -93,10 +97,15 @@ public class EnemyMovement : CharacterMovement
                 audioSource.PlayDelayed(1.2f);
                 transform.forward = target.transform.position - transform.position;
             }
+            else {
+                Debug.Log(name + ": Attack->End (Did not attack)");
+                characterState = CharacterState.End;
+            }
         }
-        if(characterState == CharacterState.End) {
+        else if(characterState == CharacterState.End) {
             ClearAttackableTiles();
-            characterState = CharacterState.Idle;
+            Debug.Log(name + ": End->Begin");
+            characterState = CharacterState.Begin;
             TurnManager.instance.EndTurn();
         }
     }

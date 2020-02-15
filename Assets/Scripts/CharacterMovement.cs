@@ -4,12 +4,15 @@ using UnityEngine;
 using UnityEngine.AI;
 
 public enum CharacterState {
+    Begin,
     Idle,
-    Selected,
+    PreStandbyPhase1,
     StandbyPhase1,
+    Idle2,
+    PreStandbyPhase2,
+    StandbyPhase2,
     Move,
     Attack,
-    StandbyPhase2,
     End
 }
 
@@ -20,7 +23,7 @@ public class CharacterMovement : MonoBehaviour
     public bool turn = false;
     public bool selected = false;
 
-    public CharacterState characterState = CharacterState.Idle;
+    public CharacterState characterState = CharacterState.Begin;
 
     public List<Tile> selectableTiles = new List<Tile>();
     public List<Tile> attackableTiles = new List<Tile>();
@@ -125,7 +128,8 @@ public class CharacterMovement : MonoBehaviour
             tile.attackable = true;
         }
     }
-    public void FindAttackableTiles(){
+    public void FindAttackableTiles(string player){
+        string opponent = "";
         if (attackableTiles.Count > 0) {
             return;
         }
@@ -150,19 +154,25 @@ public class CharacterMovement : MonoBehaviour
                 }
             }          
         }
+        if(player == "Player") {
+            opponent = "Enemy";
+        }
+        else if (player == "Enemy") {
+            opponent = "Player";
+        }
         for(int i = attackableTiles.Count - 1; i >= 0 ;i--) {
-            if(attackableTiles[i].GetTerrain() != "Enemy") {
-                Debug.Log("Not enemy in " + i);
+            if(attackableTiles[i].GetTerrain() != opponent) {
+//                Debug.Log("Not " + opponent + " in " + attackableTiles[i].name);
                 //attackableTiles[i].attackable = false;
                 attackableTiles.RemoveAt(i);
             }
         }
+        attackableTiles.Remove(GetCurrentTile());
     }
 
     public void MoveToTile(Tile tile) {
         path.Clear();
         tile.target = true;
-        characterState = CharacterState.Move;
         Tile next = tile;
         while(next != null) {
             path.Push(next);
@@ -243,7 +253,6 @@ public class CharacterMovement : MonoBehaviour
         openList.Add(currentTile);
         //currentTile.parent = null;
 
-        Debug.Log(currentTile.transform.position + "," + target.transform.position);
         currentTile.h = Vector3.Distance(currentTile.transform.position, target.transform.position);
         currentTile.f = currentTile.h;
 
@@ -252,10 +261,11 @@ public class CharacterMovement : MonoBehaviour
             closedList.Add(tmpTile);
             if(tmpTile == target) {
                 actualTargetTile = FindEndTile(tmpTile);
-                if (actualTargetTile.GetTerrain() == "Enemy") {
+/*                 if (actualTargetTile.GetTerrain() == "Enemy") {
+                    Debug.Log(name + ": Move->End");
                     characterState = CharacterState.End;
                     return;
-                }
+                } */
                 MoveToTile(actualTargetTile);
                 return;
             }
@@ -330,7 +340,7 @@ public class CharacterMovement : MonoBehaviour
 
     protected void CheckDead(){
         if (GetComponent<CharacterStats>().currentHealth <= 0) {
-            Debug.Log("I'm dead");
+            //Debug.Log("I'm dead");
             characterAnimator.SetTrigger("Death");
         }
     }

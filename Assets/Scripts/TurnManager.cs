@@ -34,6 +34,8 @@ public class TurnManager : MonoBehaviour
     public int enemies;
     public int players;
 
+    public bool holdOn;
+
     void Start() {
         instance = this;
         activePlayer = null;
@@ -138,13 +140,16 @@ public class TurnManager : MonoBehaviour
 
     }
 
-    public void CheckForEnd() {
+    public bool CheckForEnd() {
         if(players == 0) {
             DefeatPanel.SetActive(true);
+            return true;
         }
         else if (enemies == 0) {
             VictoryPanel.SetActive(true);
+            return true;
         }
+        return false;
     }
 
      Faction GetNextTeam() {

@@ -29,23 +29,37 @@ public class PlayerMovement : CharacterMovement
         Debug.DrawRay(transform.position + new Vector3(0.0f,0.5f,0.0f),-transform.up);
 
         CheckDead();
+        
+        if(TurnManager.instance.holdOn) {
+            return;
+        }
 
         if(!turn) { 
             return;
         }
+
+        if( characterState == CharacterState.Begin) {
+            FindAttackableTiles(this.gameObject.transform.tag);
+            CheckForItem();
+            Debug.Log(name + ": Begin->Idle");
+            characterState = CharacterState.Idle;
+        }
+        if( characterState == CharacterState.Idle) {
+            //Waiting for events
+        }
         if(!selected) {
             return;
         }
-
-        if( characterState == CharacterState.Idle) {
-            FindAttackableTiles();
-            CheckForItem();
-        }
-        if( characterState == CharacterState.StandbyPhase1 ) {
-            selected = true;
-            ClearAttackableTiles();
+        if( characterState == CharacterState.PreStandbyPhase1 ) {
             GetCurrentTile();
+            ClearAttackableTiles();
             FindSelectableTiles();
+            
+            selected = true;
+            Debug.Log(name + ": PSB1->SB1");
+            characterState = CharacterState.StandbyPhase1;
+        }
+        else if( characterState == CharacterState.StandbyPhase1 ) {
             if(Input.GetMouseButtonDown(0)) {
                 if (selectableTiles.Count > 0){
                     TurnManager.instance.CollidersEnabled(false);
@@ -57,19 +71,34 @@ public class PlayerMovement : CharacterMovement
             if (characterAgent.remainingDistance <= 0.37f && characterAgent.hasPath) {
                 StopMove();
                 ClearSelectableTiles();
-                characterState = CharacterState.StandbyPhase2;
+                TurnManager.instance.CollidersEnabled(true);
+                GetCurrentTile();
+                FindAttackableTiles(this.gameObject.transform.tag);
+                CheckForItem();
+                Debug.Log(name + ": Move->Idle2");
+                characterState = CharacterState.Idle2;
                 //TurnManager.EndTurn();
             }
             if (tmpTile.target && tmpTile.current) {
                 ClearSelectableTiles();
-                characterState = CharacterState.StandbyPhase2;
+                TurnManager.instance.CollidersEnabled(true);
+                GetCurrentTile();
+                FindAttackableTiles(this.gameObject.transform.tag);
+                CheckForItem();
+                Debug.Log(name + ": Move->Idle2");
+                characterState = CharacterState.Idle2;
             }
         }
+        else if(characterState == CharacterState.Idle2) {
+            //Wait for button input
+        }
+        else if (characterState == CharacterState.PreStandbyPhase2) {
+            Debug.Log(name + ": PSB2->SB2");
+            characterState = CharacterState.StandbyPhase2;
+
+        }
         else if (characterState == CharacterState.StandbyPhase2) {
-            FindAttackableTiles();
-            CheckForItem();
-            if(Input.GetMouseButton(0)) {
-                TurnManager.instance.CollidersEnabled(true);
+            if(Input.GetMouseButtonDown(0)) {
                 if(attackableTiles.Count > 0) {
                     Attack();
                 }
@@ -80,7 +109,8 @@ public class PlayerMovement : CharacterMovement
             actionUIManager.activePlayer = null; 
             TurnManager.instance.activePlayer = null;
             selected = false;
-            characterState = CharacterState.Idle;
+            Debug.Log(name + ": End->Begin");
+            characterState = CharacterState.Begin;
             TurnManager.instance.EndTurn(this);
         }
     }
@@ -97,13 +127,14 @@ public class PlayerMovement : CharacterMovement
                      if(!(tmpTile.target && tmpTile.current)) {
                         targetTransform = tmpTile.transform;
                         targetTransform.position += new Vector3(0.0f,0.5f,0.0f);
-                        Debug.Log("Target: " + targetTransform.position);
+//                        Debug.Log("Target: " + targetTransform.position);
                         characterAgent.SetDestination(targetTransform.position);
                         GetComponentInChildren<ParticleSystem>().Play();
                         characterAgent.isStopped = false;
                         characterAnimator.SetBool("Move",true);
                     }
                     //MoveToTile(tmpTile);
+                    Debug.Log(name + ": SB1->Move");
                     characterState = CharacterState.Move;
                     
                 }
@@ -123,8 +154,9 @@ public class PlayerMovement : CharacterMovement
         viewRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(viewRay, out viewHit)) {
             if (viewHit.transform.tag == "Enemy") {
+                Debug.Log(name + ": SBX->Attack");
                 characterState = CharacterState.Attack;
-                Debug.Log("Pew Pew");
+                //Debug.Log("Pew Pew");
                 characterAnimator.SetTrigger("Attack");
                 audioSource.clip = SFX[0];
                 audioSource.time = 0.7f;

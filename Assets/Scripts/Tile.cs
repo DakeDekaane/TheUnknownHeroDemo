@@ -148,7 +148,7 @@ public class Tile : MonoBehaviour
 
     public string GetTerrain() {
         if (Physics.Raycast(transform.position, Vector3.up, out hit, 1)) {
-            Debug.Log("Terrain: " + hit.transform.tag);
+            //Debug.Log("Terrain: " + hit.transform.tag);
             terrain = hit.transform.tag;
             return hit.transform.tag;
             //adjacentTiles.Add(tmpTile);

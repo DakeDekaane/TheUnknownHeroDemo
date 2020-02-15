@@ -17,31 +17,29 @@ public class ActionUIManager : MonoBehaviour
     
     void Update() {
         if(activePlayer != null) {
-            if (activePlayer.characterState == CharacterState.Idle || activePlayer.characterState == CharacterState.StandbyPhase1 || activePlayer.characterState == CharacterState.StandbyPhase2) {
+            if (activePlayer.characterState == CharacterState.Begin || activePlayer.characterState == CharacterState.Idle || activePlayer.characterState == CharacterState.Idle2 || activePlayer.characterState == CharacterState.StandbyPhase1 || activePlayer.characterState == CharacterState.StandbyPhase2) {
                 actionPanel.SetActive(true);
             }
             if(activePlayer.characterState == CharacterState.Idle) {
                actionPanel.transform.Find("MoveButton").GetComponent<Button>().interactable = true;
-                
+            }
+            else {
+               actionPanel.transform.Find("MoveButton").GetComponent<Button>().interactable = false;
             }
             if(activePlayer.attackableTiles.Count > 0){
                actionPanel.transform.Find("AttackButton").GetComponent<Button>().interactable = true;
             }
-            else {
+            else{
                actionPanel.transform.Find("AttackButton").GetComponent<Button>().interactable = false;
             }
-            if(activePlayer.characterState == CharacterState.Move) {
+            if(activePlayer.characterState == CharacterState.Move || activePlayer.characterState == CharacterState.Attack) {
                 actionPanel.SetActive(false);
-            }
-            if(activePlayer.characterState == CharacterState.StandbyPhase2) {
-               actionPanel.transform.Find("MoveButton").GetComponent<Button>().interactable = false;
             }
             if(activePlayer.currentTile.itemTiles.Count > 0) {
                actionPanel.transform.Find("ItemButton").GetComponent<Button>().interactable = true;
             }
             else {
                actionPanel.transform.Find("ItemButton").GetComponent<Button>().interactable = false;
-
             }
         }
         else {
@@ -52,29 +50,33 @@ public class ActionUIManager : MonoBehaviour
     public void Move() {
         if(activePlayer.characterState == CharacterState.Idle) {
             activePlayer.selected = true;
-            activePlayer.characterState = CharacterState.StandbyPhase1;
+            Debug.Log(activePlayer.name + ": Idle->PSB1");
+            activePlayer.characterState = CharacterState.PreStandbyPhase1;
         }
     }
 
     public void Attack() {
-        if(activePlayer.characterState == CharacterState.Idle || activePlayer.characterState == CharacterState.StandbyPhase2) {
+        if(activePlayer.characterState == CharacterState.Idle || activePlayer.characterState == CharacterState.Idle2) {
             activePlayer.selected = true;
-            activePlayer.characterState = CharacterState.StandbyPhase2;
+            Debug.Log(activePlayer.name + ": IdleX->PSB2");
+            activePlayer.characterState = CharacterState.PreStandbyPhase2;
             activePlayer.ShowAttackableTiles();
         }
         
     }
 
     public void Item() {
-        if(activePlayer.characterState == CharacterState.Idle || activePlayer.characterState == CharacterState.StandbyPhase2) {
+        if(activePlayer.characterState == CharacterState.Idle || activePlayer.characterState == CharacterState.Idle2) {
             activePlayer.selected = true;
-            activePlayer.characterState = CharacterState.StandbyPhase2;
+            Debug.Log(activePlayer.name + ": IdleX->End");
+            activePlayer.characterState = CharacterState.End;
             activePlayer.UseItem();
         }
     }
 
     public void Wait() {
-        if(activePlayer.characterState == CharacterState.Idle || activePlayer.characterState == CharacterState.StandbyPhase1 || activePlayer.characterState == CharacterState.StandbyPhase2) {
+        if(activePlayer.characterState == CharacterState.Idle || activePlayer.characterState == CharacterState.Idle2) {
+            Debug.Log(activePlayer.name + ": IdleX->End");
             activePlayer.characterState = CharacterState.End;
             //TurnManager.instance.EndTurn(activePlayer);
         }

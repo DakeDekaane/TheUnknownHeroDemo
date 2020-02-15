@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     public void SaveAndContinue() {
         //Save game
         //Load Next Level
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
     public void SaveAndReturn() {
         //Save game
