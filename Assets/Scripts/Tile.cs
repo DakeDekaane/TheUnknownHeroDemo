@@ -158,6 +158,15 @@ public class Tile : MonoBehaviour
         }
     }
 
+    public HealBox GetItem() {
+        if (Physics.Raycast(transform.position, Vector3.up, out hit, 1)) {
+            if(hit.transform.tag == "Item") {
+                return hit.transform.GetComponent<HealBox>();
+            }
+        }
+        return null;
+    }
+
 
     /*
     public void GetAttackTiles(int attackRange) {

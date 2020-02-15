@@ -29,7 +29,42 @@ ModelImporter:
     4300004: Cover
     7400000: Take 001
     9500000: //RootNode
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Leather
+    second: {fileID: 2100000, guid: 0d0338b3cca6ace4ebdd6b85d9eac1a9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 'Material #122'
+    second: {fileID: 2100000, guid: a2491c6cf04967d498f4aabd0f66ae11, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 'Material #87'
+    second: {fileID: 2100000, guid: 0a24471db1afe0c47bf5fcc38db4f4ba, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: No Name
+    second: {fileID: 2100000, guid: 4a64cce562168c54f823a2d1a15e7fb0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ShinyChrome
+    second: {fileID: 2100000, guid: 666468f547e810c43ae50bb5c87463c1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ShinyGolden
+    second: {fileID: 2100000, guid: e7ec2bb3650ade04b9aa4632aa4da67b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ShinyWeirdColourMetal
+    second: {fileID: 2100000, guid: 23907317393f0044a899fd14a9707650, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
@@ -81,7 +116,7 @@ ModelImporter:
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 0.00254
+    previousCalculatedGlobalScale: 0.00127
     hasPreviousCalculatedGlobalScale: 1
   tangentSpace:
     normalSmoothAngle: 60

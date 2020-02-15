@@ -64,11 +64,11 @@ public class TurnManager : MonoBehaviour
     }
 
     public void CollidersEnabled(bool enabled) {
-        foreach(GameObject unit in TurnManager.instance.playerChars) {
+        foreach(GameObject unit in playerChars) {
             if(unit != null)
                 unit.GetComponent<Collider>().enabled = enabled;
         }
-        foreach(GameObject unit in TurnManager.instance.enemyChars) {
+        foreach(GameObject unit in enemyChars) {
             if(unit != null)
                 unit.GetComponent<Collider>().enabled = enabled;
         }
@@ -154,6 +154,7 @@ public class TurnManager : MonoBehaviour
                     return Faction.Ally;
                 }
                 else {
+                    Debug.Log("Enemy Turn");
                     return Faction.Enemy;
                 }
             }
@@ -161,6 +162,7 @@ public class TurnManager : MonoBehaviour
                 return Faction.Enemy;
             }
             else if(turnTeam == Faction.Enemy) {
+                Debug.Log("Player Turn");
                 return Faction.Player;
             }
         }

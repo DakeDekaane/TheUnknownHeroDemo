@@ -69,7 +69,7 @@ public class ActionUIManager : MonoBehaviour
         if(activePlayer.characterState == CharacterState.Idle || activePlayer.characterState == CharacterState.StandbyPhase2) {
             activePlayer.selected = true;
             activePlayer.characterState = CharacterState.StandbyPhase2;
-            activePlayer.GetComponent<CharacterStats>().Heal(10);
+            activePlayer.UseItem();
         }
     }
 

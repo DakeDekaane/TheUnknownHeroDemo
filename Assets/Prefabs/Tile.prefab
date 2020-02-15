@@ -19,7 +19,7 @@ GameObject:
   m_TagString: Tile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 19
   m_IsActive: 1
 --- !u!4 &2639174633184637471
 Transform:
@@ -106,7 +106,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   terrain: 
-  highlightMaterial: {fileID: 2100000, guid: 173d0e832359f3345a0acfea4d3ef88c, type: 2}
   originalMaterial: {fileID: 2100000, guid: c70e1a0a3bad70d45a0ad1d7e40ac060, type: 2}
   walkable: 1
   current: 0
@@ -119,6 +118,7 @@ MonoBehaviour:
   attackableMaterial: {fileID: 2100000, guid: b2b8a36339f02d545af539d776bd2f9b, type: 2}
   adjacentTiles: []
   attackableTiles: []
+  itemTiles: []
   visited: 0
   parent: {fileID: 0}
   distance: 0

@@ -95,6 +95,7 @@ public class EnemyMovement : CharacterMovement
             }
         }
         if(characterState == CharacterState.End) {
+            ClearAttackableTiles();
             characterState = CharacterState.Idle;
             TurnManager.instance.EndTurn();
         }
@@ -121,7 +122,7 @@ public class EnemyMovement : CharacterMovement
                 }
             }
             target = nearest;
-            target.transform.GetComponentInChildren<Renderer>().material.color = Color.black;
+            //target.transform.GetComponentInChildren<Renderer>().material.color = Color.black;
         }
         if(behaviour == EnemyBehaviour.HighestDamage) {
             damage = -Mathf.Infinity;
@@ -133,7 +134,7 @@ public class EnemyMovement : CharacterMovement
                 }
             }
             target = highest;
-            target.transform.GetComponentInChildren<Renderer>().material.color = Color.white;
+            //target.transform.GetComponentInChildren<Renderer>().material.color = Color.white;
         }
     }
 }

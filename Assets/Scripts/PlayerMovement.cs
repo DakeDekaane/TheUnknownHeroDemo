@@ -10,6 +10,8 @@ public class PlayerMovement : CharacterMovement
 
     public ActionUIManager actionUIManager;
 
+    public HealBox healBox;
+
     //public Tile currentTile;
 
     void Start() {
@@ -54,6 +56,8 @@ public class PlayerMovement : CharacterMovement
         else if (characterState == CharacterState.Move) {
             if (characterAgent.remainingDistance <= 0.37f && characterAgent.hasPath) {
                 StopMove();
+                ClearSelectableTiles();
+                characterState = CharacterState.StandbyPhase2;
                 //TurnManager.EndTurn();
             }
             if (tmpTile.target && tmpTile.current) {
@@ -111,8 +115,6 @@ public class PlayerMovement : CharacterMovement
         characterAgent.isStopped = true;
         characterAnimator.SetBool("Move", false);
         GetComponentInChildren<ParticleSystem>().Stop();
-        ClearSelectableTiles();
-        characterState = CharacterState.StandbyPhase2;
     }
 
 
@@ -139,7 +141,18 @@ public class PlayerMovement : CharacterMovement
         currentTile = GetCurrentTile();
         currentTile.GetItemTiles();
         foreach(Tile tile in currentTile.itemTiles) {
+            healBox = tile.GetItem();
             tile.attackable = true;
         }
+    }
+
+    public void UseItem() {
+        GetComponent<CharacterStats>().Heal(healBox.healAmount);
+        healBox.PlayParticles();
+        Destroy(healBox.gameObject,1.0f);
+        foreach(Tile tile in currentTile.adjacentTiles) {
+            tile.attackable = false;
+        }
+        healBox = null;
     }
 }
