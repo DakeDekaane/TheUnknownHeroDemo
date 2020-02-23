@@ -2,25 +2,39 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum TerrainID {
+    Plain,
+    Forest,
+    City,
+    Ruins,
+    Water,
+    Swamp,
+    Trench,
+    Item
+}
+
+[ExecuteInEditMode]
 public class Tile : MonoBehaviour
 {
-    public string terrain;
-    //Tile States
+    //Tile terrain
+    
+    public TerrainID terrain;
+    public TerrainData terrainData;
 
-    private MeshRenderer meshRenderer;
-    public Material originalMaterial;
-
-    public bool walkable = true;
+    //Tile Status and rendering
+    public bool walkable;
     public bool current = false;
     public bool target = false;
     public bool selectable = false;
     public bool attackable = false;
-    
+    private MeshRenderer meshRenderer;
+    public Material originalMaterial;
     public Material currentMaterial;
     public Material targetMaterial;
     public Material selectableMaterial;
     public Material attackableMaterial;
 
+    //AdjacentTiles
     public List<Tile> adjacentTiles = new List<Tile>();
     public List<Tile> attackableTiles = new List<Tile>();
     public List<Tile> itemTiles = new List<Tile>();
@@ -40,12 +54,16 @@ public class Tile : MonoBehaviour
     public float g = 0;
     public float h = 0;
 
+    public CharacterMovement currentCharacter;
+
     // Start is called before the first frame update
     void Start()
     {
+        terrainData = TerrainList.instance.terrainSet[terrain];
+        walkable = terrainData.walkable;
         meshRenderer = GetComponent<MeshRenderer>();
-        GetTerrain();
-        //GetAdjacentTiles();
+        GetObject();
+        GetAdjacentTiles(null);
     }
 
     // Update is called once per frame
@@ -115,7 +133,7 @@ public class Tile : MonoBehaviour
         Collider[] frontColliders = Physics.OverlapBox(transform.position + direction * 2.0f, transform.localScale * 0.1f);
         foreach(Collider c in frontColliders) {
             Tile tmpTile = c.GetComponent<Tile>();
-            if (tmpTile != null && tmpTile.GetTerrain() == "Item") {
+            if (tmpTile != null && tmpTile.GetObject() == "Item") {
                     Debug.Log("Item found!");
                     itemTiles.Add(tmpTile);
             }
@@ -146,10 +164,10 @@ public class Tile : MonoBehaviour
         GetItemTilesInDirection(Vector3.right);
     }
 
-    public string GetTerrain() {
+    public string GetObject() {
         if (Physics.Raycast(transform.position, Vector3.up, out hit, 1)) {
             //Debug.Log("Terrain: " + hit.transform.tag);
-            terrain = hit.transform.tag;
+            //terrain = hit.transform.tag;
             return hit.transform.tag;
             //adjacentTiles.Add(tmpTile);
         }

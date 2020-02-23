@@ -64,6 +64,10 @@ public class EnemyMovement : CharacterMovement
                 characterAgent.isStopped = false;
                 characterAnimator.SetBool("Move",true);
             }
+            else {
+                Debug.Log(name + ": Begin->Attack");
+                characterState = CharacterState.Attack;
+            }
         }
         
         else if(characterState == CharacterState.Move) {

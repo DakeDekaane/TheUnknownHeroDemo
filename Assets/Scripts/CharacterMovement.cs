@@ -161,7 +161,7 @@ public class CharacterMovement : MonoBehaviour
             opponent = "Player";
         }
         for(int i = attackableTiles.Count - 1; i >= 0 ;i--) {
-            if(attackableTiles[i].GetTerrain() != opponent) {
+            if(attackableTiles[i].GetObject() != opponent) {
 //                Debug.Log("Not " + opponent + " in " + attackableTiles[i].name);
                 //attackableTiles[i].attackable = false;
                 attackableTiles.RemoveAt(i);
