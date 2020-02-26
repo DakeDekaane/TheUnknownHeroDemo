@@ -16,12 +16,20 @@ public enum CharacterState {
     End
 }
 
+public enum SelectStatus {
+    Selected,
+    Unselected,
+    Acted
+}
+
 public class CharacterMovement : MonoBehaviour
 {
 
     public GameObject target;
     public bool turn = false;
     public bool selected = false;
+
+    public SelectStatus status = SelectStatus.Unselected;
 
     public CharacterState characterState = CharacterState.Begin;
 
@@ -53,6 +61,12 @@ public class CharacterMovement : MonoBehaviour
     public AudioClip[] SFX;
     protected AudioSource audioSource;
 
+
+    public Material selectedMaterial;
+    public Material unselectedMaterial;
+    public Material actedMaterial;
+
+
     protected void Init() {
 
         characterAnimator = GetComponent<Animator>();
@@ -63,8 +77,16 @@ public class CharacterMovement : MonoBehaviour
 
     public Tile GetCurrentTile() {
         currentTile = GetTargetTile(this.gameObject);
-        currentTile.current = true;
+        //currentTile.current = true;
         return currentTile;
+    }
+
+    public void ShowCurrentTile() {
+        currentTile.current = true;
+    }
+
+    public void ClearCurrentTile(){
+        currentTile.current = false;
     }
 
     public Tile GetTargetTile(GameObject target) {
@@ -128,13 +150,14 @@ public class CharacterMovement : MonoBehaviour
             tile.attackable = true;
         }
     }
+
     public void FindAttackableTiles(string player){
         string opponent = "";
         if (attackableTiles.Count > 0) {
             return;
         }
         ComputeAttackableTiles();
-        GetCurrentTile();
+        currentTile = GetCurrentTile();
         process.Enqueue(currentTile);
         currentTile.visited = true;
         //currentTile.parent = null;
@@ -342,6 +365,19 @@ public class CharacterMovement : MonoBehaviour
         if (GetComponent<CharacterStats>().currentHealth <= 0) {
             //Debug.Log("I'm dead");
             characterAnimator.SetTrigger("Death");
+        }
+    }
+
+    public void SetStatus(SelectStatus status) {
+        this.status = status;
+        if(status == SelectStatus.Selected) {
+            GetComponentInChildren<SkinnedMeshRenderer>().material = selectedMaterial;
+        }
+        if(status == SelectStatus.Unselected) {
+            GetComponentInChildren<SkinnedMeshRenderer>().material = unselectedMaterial;
+        }
+        if(status == SelectStatus.Acted) {
+            GetComponentInChildren<SkinnedMeshRenderer>().material = actedMaterial;
         }
     }
 }

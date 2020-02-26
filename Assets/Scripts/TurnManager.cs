@@ -23,6 +23,7 @@ public class TurnManager : MonoBehaviour
     public  bool Allies;
 
     public PlayerMovement activePlayer = null; //
+    public CharacterMovement activeCharacter = null;
 
     public static TurnManager instance;
 
@@ -66,7 +67,7 @@ public class TurnManager : MonoBehaviour
         }
     }
 
-    public void CollidersEnabled(bool enabled) {
+    /*public void CollidersEnabled(bool enabled) {
         foreach(GameObject unit in playerChars) {
             if(unit != null)
                 unit.GetComponent<Collider>().enabled = enabled;
@@ -75,17 +76,37 @@ public class TurnManager : MonoBehaviour
             if(unit != null)
                 unit.GetComponent<Collider>().enabled = enabled;
         }
+    }*/
+
+    void ClearSelectableCharacter(){
+        foreach (CharacterMovement obj in playerList) {
+            if (obj.status != SelectStatus.Acted) {
+                obj.SetStatus(SelectStatus.Unselected);
+                obj.GetCurrentTile().current = false;
+            }
+        }
     }
 
+    void ClearActedCharacter(){
+        foreach (GameObject obj in playerChars) {
+            obj.GetComponent<PlayerMovement>().SetStatus(SelectStatus.Unselected);
+        }
+        foreach (GameObject obj in playerChars) {
+            obj.GetComponent<PlayerMovement>().SetStatus(SelectStatus.Unselected);
+        }
+    }
     void PickPlayer() {
         Ray viewRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit viewHit;
         if (Physics.Raycast(viewRay, out viewHit)) {
-            if (viewHit.transform.tag == "Player") {
+            if (viewHit.transform.tag == "Player" && viewHit.transform.GetComponent<PlayerMovement>().status != SelectStatus.Acted) {
+                ClearSelectableCharacter();
                 activePlayer = viewHit.transform.GetComponent<PlayerMovement>();
                 activePlayer.actionUIManager.activePlayer = activePlayer;
                 Debug.Log("Player Selected");
                 activePlayer.GetCurrentTile();
+                activePlayer.ShowCurrentTile();
+                activePlayer.SetStatus(SelectStatus.Selected);
                 //characterState = CharacterState.StandbyPhase1;
                 //FindSelectableTiles();
             }
@@ -112,14 +133,17 @@ public class TurnManager : MonoBehaviour
     }
 
     public  void StartTurn() {
+        ClearActedCharacter();
         if(turnTeam == Faction.Ally || turnTeam == Faction.Enemy) {
             if(turnList.Count > 0) {
                 turnList[0].BeginTurn();
+                activeCharacter = turnList[0];
             }
         }
     }
 
     public  void EndTurn(CharacterMovement player) {
+        player.SetStatus(SelectStatus.Acted);
         player.EndTurn();
         turnList.Remove(player);
         if(turnList.Count == 0) {
@@ -129,11 +153,14 @@ public class TurnManager : MonoBehaviour
 
     public  void EndTurn() {
         CharacterMovement unit = turnList[0];
+        unit.SetStatus(SelectStatus.Acted);
         unit.EndTurn();
+        activeCharacter = null;
         turnList.Remove(unit);
 
         if(turnList.Count > 0) {
             turnList[0].BeginTurn();
+            activeCharacter = turnList[0];
         }
         if(turnList.Count == 0) {
             turnTeam = GetNextTeam();

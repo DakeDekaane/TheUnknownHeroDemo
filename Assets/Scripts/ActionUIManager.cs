@@ -35,9 +35,9 @@ public class ActionUIManager : MonoBehaviour
             if(activePlayer.characterState == CharacterState.Move || activePlayer.characterState == CharacterState.Attack) {
                 actionPanel.SetActive(false);
             }
-            if(activePlayer.currentTile.itemTiles.Count > 0) {
+            /*if(activePlayer.currentTile.itemTiles.Count > 0) {
                actionPanel.transform.Find("ItemButton").GetComponent<Button>().interactable = true;
-            }
+            }*/
             else {
                actionPanel.transform.Find("ItemButton").GetComponent<Button>().interactable = false;
             }

@@ -55,11 +55,10 @@ public class EnemyMovement : CharacterMovement
             if(!(actualTargetTile.target && actualTargetTile.current)) {
                 Debug.Log(name + ": Begin->Move");
                 characterState = CharacterState.Move;
-                TurnManager.instance.CollidersEnabled(false);
+                //TurnManager.instance.CollidersEnabled(false);
                 targetTransform = actualTargetTile.transform;
-                targetTransform.position += new Vector3(0.0f,0.5f,0.0f);
                 Debug.Log("Target: " + targetTransform.position);
-                characterAgent.SetDestination(targetTransform.position);
+                characterAgent.SetDestination(targetTransform.position + new Vector3(0.0f,0.5f,0.0f));
                 GetComponentInChildren<ParticleSystem>().Play();
                 characterAgent.isStopped = false;
                 characterAnimator.SetBool("Move",true);
@@ -73,7 +72,7 @@ public class EnemyMovement : CharacterMovement
         else if(characterState == CharacterState.Move) {
             //Debug.Log("Distance to target: "+ characterAgent.remainingDistance);
             if (characterAgent.remainingDistance <= 0.37f && characterAgent.hasPath) {
-                TurnManager.instance.CollidersEnabled(true);
+                //TurnManager.instance.CollidersEnabled(true);
                 characterAgent.isStopped = true;
                 characterAnimator.SetBool("Move", false);
                 ClearSelectableTiles();

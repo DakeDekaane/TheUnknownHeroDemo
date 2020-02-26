@@ -25,8 +25,8 @@ public class CharacterStats : MonoBehaviour
     public Color lowHealth;
     public float minHealthValue;
 
-    public Transform cameraOrientation;
     private int damage;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -41,7 +41,10 @@ public class CharacterStats : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        HPBar.transform.forward = cameraOrientation.forward;
+        HPBar.transform.forward = Camera.main.transform.forward;
+    }
+
+    void UpdateHPBar() {
         HPBar.fillAmount = (float)currentHealth/maxHealth;
         if (HPBar.fillAmount < minHealthValue) {
             HPBar.color = lowHealth;
@@ -75,6 +78,7 @@ public class CharacterStats : MonoBehaviour
         if (currentHealth/maxHealth < minHealthValue) {
             HPBar.color = lowHealth;
         }
+        UpdateHPBar();
     }
 
     public void Heal(int healAmount) {
@@ -83,5 +87,6 @@ public class CharacterStats : MonoBehaviour
         if (currentHealth/maxHealth < minHealthValue) {
             HPBar.color = highHealth;
         }
+        UpdateHPBar();
     }
 }

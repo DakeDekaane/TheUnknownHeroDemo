@@ -13,7 +13,6 @@ public enum TerrainID {
     Item
 }
 
-[ExecuteInEditMode]
 public class Tile : MonoBehaviour
 {
     //Tile terrain
@@ -185,7 +184,7 @@ public class Tile : MonoBehaviour
         return null;
     }
 
-
+    
     /*
     public void GetAttackTiles(int attackRange) {
         if (attackRange == 0) {

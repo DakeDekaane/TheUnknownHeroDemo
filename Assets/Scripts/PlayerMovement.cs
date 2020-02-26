@@ -52,6 +52,7 @@ public class PlayerMovement : CharacterMovement
         }
         if( characterState == CharacterState.PreStandbyPhase1 ) {
             GetCurrentTile();
+            ShowCurrentTile();
             ClearAttackableTiles();
             FindSelectableTiles();
             
@@ -62,7 +63,7 @@ public class PlayerMovement : CharacterMovement
         else if( characterState == CharacterState.StandbyPhase1 ) {
             if(Input.GetMouseButtonDown(0)) {
                 if (selectableTiles.Count > 0){
-                    TurnManager.instance.CollidersEnabled(false);
+                    //TurnManager.instance.CollidersEnabled(false);
                     Move();
                 }
             }
@@ -71,8 +72,9 @@ public class PlayerMovement : CharacterMovement
             if (characterAgent.remainingDistance <= 0.37f && characterAgent.hasPath) {
                 StopMove();
                 ClearSelectableTiles();
-                TurnManager.instance.CollidersEnabled(true);
+                //TurnManager.instance.CollidersEnabled(true);
                 GetCurrentTile();
+                ShowCurrentTile();
                 FindAttackableTiles(this.gameObject.transform.tag);
                 CheckForItem();
                 Debug.Log(name + ": Move->Idle2");
@@ -81,8 +83,9 @@ public class PlayerMovement : CharacterMovement
             }
             if (tmpTile.target && tmpTile.current) {
                 ClearSelectableTiles();
-                TurnManager.instance.CollidersEnabled(true);
+                //TurnManager.instance.CollidersEnabled(true);
                 GetCurrentTile();
+                ShowCurrentTile();
                 FindAttackableTiles(this.gameObject.transform.tag);
                 CheckForItem();
                 Debug.Log(name + ": Move->Idle2");
@@ -126,9 +129,8 @@ public class PlayerMovement : CharacterMovement
                     tmpTile.target = true;
                      if(!(tmpTile.target && tmpTile.current)) {
                         targetTransform = tmpTile.transform;
-                        targetTransform.position += new Vector3(0.0f,0.5f,0.0f);
 //                        Debug.Log("Target: " + targetTransform.position);
-                        characterAgent.SetDestination(targetTransform.position);
+                        characterAgent.SetDestination(targetTransform.position + new Vector3(0.0f,0.5f,0.0f));
                         GetComponentInChildren<ParticleSystem>().Play();
                         characterAgent.isStopped = false;
                         characterAnimator.SetBool("Move",true);
