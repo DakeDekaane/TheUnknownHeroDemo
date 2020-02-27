@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tag: Forest
   _prefab: {fileID: 8234335905428055207, guid: 7d169eedd190d5b48b3a5e9fed641a1f, type: 3}
-  _bonusDef: 0.2
-  _bonusAvo: 0.3
+  _bonusDef: 20
+  _bonusAvo: 30
   _movementCost: 2
   _walkable: 1

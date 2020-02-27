@@ -79,6 +79,8 @@ public class PlayerMovement : CharacterMovement
                 CheckForItem();
                 Debug.Log(name + ": Move->Idle2");
                 characterState = CharacterState.Idle2;
+                GetComponent<CharacterStats>().currentAvoid = GetComponent<CharacterMovement>().GetCurrentTile().terrainData.bonusAvo;
+                Debug.Log("Bonus Avo:  " + GetComponent<CharacterStats>().currentAvoid);
                 //TurnManager.EndTurn();
             }
             if (tmpTile.target && tmpTile.current) {
@@ -90,6 +92,8 @@ public class PlayerMovement : CharacterMovement
                 CheckForItem();
                 Debug.Log(name + ": Move->Idle2");
                 characterState = CharacterState.Idle2;
+                Debug.Log("Bonus Avo:  " + GetComponent<CharacterStats>().currentAvoid);
+                GetComponent<CharacterStats>().currentAvoid = GetComponent<CharacterMovement>().GetCurrentTile().terrainData.bonusAvo;
             }
         }
         else if(characterState == CharacterState.Idle2) {
@@ -114,6 +118,8 @@ public class PlayerMovement : CharacterMovement
             selected = false;
             Debug.Log(name + ": End->Begin");
             characterState = CharacterState.Begin;
+            GetComponent<CharacterStats>().currentAvoid = GetComponent<CharacterMovement>().GetCurrentTile().terrainData.bonusAvo;
+            Debug.Log("Bonus Avo:  " + GetComponent<CharacterStats>().currentAvoid);
             TurnManager.instance.EndTurn(this);
         }
     }

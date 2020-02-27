@@ -79,12 +79,15 @@ public class EnemyMovement : CharacterMovement
                 Debug.Log(name + ": Move->Attack");
                 characterState = CharacterState.Attack;
                 GetComponentInChildren<ParticleSystem>().Stop();
-                
+                GetComponent<CharacterStats>().currentAvoid = GetComponent<CharacterMovement>().GetCurrentTile().terrainData.bonusAvo;
+                Debug.Log("Bonus Avo:  " + GetComponent<CharacterStats>().currentAvoid);
             } 
             if (actualTargetTile.target && actualTargetTile.current) {
                 ClearSelectableTiles();
                 characterState = CharacterState.Attack;
                 GetComponentInChildren<ParticleSystem>().Stop();
+                GetComponent<CharacterStats>().currentAvoid = GetComponent<CharacterMovement>().GetCurrentTile().terrainData.bonusAvo;
+                Debug.Log("Bonus Avo:  " + GetComponent<CharacterStats>().currentAvoid);
             }
             //Move();
         }
@@ -109,6 +112,8 @@ public class EnemyMovement : CharacterMovement
             ClearAttackableTiles();
             Debug.Log(name + ": End->Begin");
             characterState = CharacterState.Begin;
+            GetComponent<CharacterStats>().currentAvoid = GetComponent<CharacterMovement>().GetCurrentTile().terrainData.bonusAvo;
+            Debug.Log("Bonus Avo:  " + GetComponent<CharacterStats>().currentAvoid);
             TurnManager.instance.EndTurn();
         }
     }

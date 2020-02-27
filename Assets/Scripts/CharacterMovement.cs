@@ -331,9 +331,9 @@ public class CharacterMovement : MonoBehaviour
             tmpPath.Push(next);
             next = next.parent;
         }
-        for (int i = 1; i < attackRange; i++) {
+        /*for (int i = 1; i < attackRange; i++) {
             tmpPath.Pop();
-        }
+        }*/
 
         if(tmpPath.Count <= movementCost) {
             return target.parent;

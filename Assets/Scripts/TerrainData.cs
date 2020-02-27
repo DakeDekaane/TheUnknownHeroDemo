@@ -10,9 +10,9 @@ public class TerrainData : ScriptableObject
     [SerializeField]
     private GameObject _prefab;
     [SerializeField]
-    private float _bonusDef;
+    private int _bonusDef;
     [SerializeField]
-    private float _bonusAvo;
+    private int _bonusAvo;
     [SerializeField]
     private int _movementCost;
     [SerializeField]
@@ -28,12 +28,12 @@ public class TerrainData : ScriptableObject
             return _prefab;
         }
     }
-    public float bonusDef {
+    public int bonusDef {
         get {
             return _bonusDef;
         }
     }
-    public float bonusAvo {
+    public int bonusAvo {
         get {
             return _bonusAvo;
         }

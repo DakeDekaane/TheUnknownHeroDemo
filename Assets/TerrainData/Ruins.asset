@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tag: Ruins
   _prefab: {fileID: 2298392900157628176, guid: 2a02b41215c53e64ab7f12d49e1b5a3a, type: 3}
-  _bonusDef: 0.3
-  _bonusAvo: 0.2
+  _bonusDef: 30
+  _bonusAvo: 20
   _movementCost: 1
   _walkable: 1

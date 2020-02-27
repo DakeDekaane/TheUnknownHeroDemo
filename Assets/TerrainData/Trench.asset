@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tag: Trench
   _prefab: {fileID: 0}
-  _bonusDef: 0.4
-  _bonusAvo: 0.2
+  _bonusDef: 40
+  _bonusAvo: 10
   _movementCost: 3
   _walkable: 1

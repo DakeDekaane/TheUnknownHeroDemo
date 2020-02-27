@@ -13,12 +13,12 @@ public class CharacterStats : MonoBehaviour
     public int maxHealth;
     public int baseAtk;
     public int baseDef;
-    public int baseAccuracy;
+    public int baseAvoid;
 
     public int currentHealth;
     public int currentAtk;
     public int currentDef;
-    public int currentAccuracy;
+    public int currentAvoid;
 
     public Image HPBar;
     public Color highHealth;
@@ -35,7 +35,7 @@ public class CharacterStats : MonoBehaviour
         currentHealth = maxHealth;
         currentAtk = baseAtk;
         currentDef = baseDef;
-        currentAccuracy = baseAccuracy;
+        currentAvoid = baseAvoid;
     }
 
     // Update is called once per frame
@@ -55,7 +55,7 @@ public class CharacterStats : MonoBehaviour
     }
 
     public void Attack(CharacterStats enemy) {
-        if(Random.Range(0,100) < currentAccuracy) {
+        if(Random.Range(0,100) < 100 - enemy.currentAvoid) {
             damage = baseAtk - enemy.baseDef;
             if (damage < 0) {
                 damage = 0;
