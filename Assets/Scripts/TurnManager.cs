@@ -29,6 +29,8 @@ public class TurnManager : MonoBehaviour
 
     public GameObject playerTurnPanel;
     public GameObject enemyTurnPanel;
+    public GameObject playerTurnBigPanel;
+    public GameObject enemyTurnBigPanel;
     public GameObject VictoryPanel;
     public GameObject DefeatPanel;
 
@@ -49,6 +51,7 @@ public class TurnManager : MonoBehaviour
             if(turnTeam == Faction.Player) {
                 enemyTurnPanel.SetActive(false);
                 playerTurnPanel.SetActive(true);
+                StartCoroutine(ShowPanel(playerTurnBigPanel));
                 InitTeamTurn(playerList);
             }
             else if(turnTeam == Faction.Ally) {
@@ -57,6 +60,7 @@ public class TurnManager : MonoBehaviour
             else if(turnTeam == Faction.Enemy) {
                 enemyTurnPanel.SetActive(true);
                 playerTurnPanel.SetActive(false);
+                StartCoroutine(ShowPanel(enemyTurnBigPanel));
                 InitTeamTurn(enemyList);
             }
         }
@@ -221,4 +225,13 @@ public class TurnManager : MonoBehaviour
         FillList(enemyList,enemyChars);
     }
 
+    public IEnumerator ShowPanel(GameObject panel) {
+        Debug.Log("Coroutine");
+        panel.SetActive(true);
+        holdOn = true;
+        yield return new WaitForSeconds(3);
+        holdOn = false;
+        panel.SetActive(false);
+
+    }
 }

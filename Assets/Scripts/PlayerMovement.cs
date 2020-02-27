@@ -19,12 +19,11 @@ public class PlayerMovement : CharacterMovement
         characterAnimator.SetBool("HasGun",true);
         characterAnimator.SetBool("HasKnife",false);
         audioSource = GetComponent<AudioSource>();
-
     }
 
     // Update is called once per frame
     void Update() {
-
+        GetTerrainBonus();
         Debug.DrawRay(transform.position,transform.forward);
         Debug.DrawRay(transform.position + new Vector3(0.0f,0.5f,0.0f),-transform.up);
 
@@ -79,8 +78,7 @@ public class PlayerMovement : CharacterMovement
                 CheckForItem();
                 Debug.Log(name + ": Move->Idle2");
                 characterState = CharacterState.Idle2;
-                GetComponent<CharacterStats>().currentAvoid = GetComponent<CharacterMovement>().GetCurrentTile().terrainData.bonusAvo;
-                Debug.Log("Bonus Avo:  " + GetComponent<CharacterStats>().currentAvoid);
+                GetTerrainBonus();
                 //TurnManager.EndTurn();
             }
             if (tmpTile.target && tmpTile.current) {
@@ -92,8 +90,7 @@ public class PlayerMovement : CharacterMovement
                 CheckForItem();
                 Debug.Log(name + ": Move->Idle2");
                 characterState = CharacterState.Idle2;
-                Debug.Log("Bonus Avo:  " + GetComponent<CharacterStats>().currentAvoid);
-                GetComponent<CharacterStats>().currentAvoid = GetComponent<CharacterMovement>().GetCurrentTile().terrainData.bonusAvo;
+                GetTerrainBonus();
             }
         }
         else if(characterState == CharacterState.Idle2) {
@@ -118,8 +115,7 @@ public class PlayerMovement : CharacterMovement
             selected = false;
             Debug.Log(name + ": End->Begin");
             characterState = CharacterState.Begin;
-            GetComponent<CharacterStats>().currentAvoid = GetComponent<CharacterMovement>().GetCurrentTile().terrainData.bonusAvo;
-            Debug.Log("Bonus Avo:  " + GetComponent<CharacterStats>().currentAvoid);
+            GetTerrainBonus();
             TurnManager.instance.EndTurn(this);
         }
     }

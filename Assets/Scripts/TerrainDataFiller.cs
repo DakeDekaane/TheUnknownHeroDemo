@@ -14,8 +14,8 @@ public class TerrainDataFiller : MonoBehaviour
     {
         if (terrainData != null) {
             nameLabel.text = terrainData.tag;
-            defLabel.text = "DEF: +" + terrainData.bonusDef * 100f + "%";
-            avoLabel.text = "AVO: +" + terrainData.bonusAvo * 100f + "%";
+            defLabel.text = "DEF: +" + terrainData.bonusDef;
+            avoLabel.text = "AVO: +" + terrainData.bonusAvo + "%";
         }
     }
 }

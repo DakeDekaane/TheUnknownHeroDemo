@@ -25,6 +25,7 @@ public class EnemyMovement : CharacterMovement
     // Update is called once per frame
     void Update()
     {
+        GetTerrainBonus();
         Debug.DrawRay(transform.position,transform.forward);
         Debug.DrawRay(transform.position + new Vector3(0.0f,0.5f,0.0f),-transform.up);
 
@@ -79,15 +80,13 @@ public class EnemyMovement : CharacterMovement
                 Debug.Log(name + ": Move->Attack");
                 characterState = CharacterState.Attack;
                 GetComponentInChildren<ParticleSystem>().Stop();
-                GetComponent<CharacterStats>().currentAvoid = GetComponent<CharacterMovement>().GetCurrentTile().terrainData.bonusAvo;
-                Debug.Log("Bonus Avo:  " + GetComponent<CharacterStats>().currentAvoid);
+                GetTerrainBonus();
             } 
             if (actualTargetTile.target && actualTargetTile.current) {
                 ClearSelectableTiles();
                 characterState = CharacterState.Attack;
                 GetComponentInChildren<ParticleSystem>().Stop();
-                GetComponent<CharacterStats>().currentAvoid = GetComponent<CharacterMovement>().GetCurrentTile().terrainData.bonusAvo;
-                Debug.Log("Bonus Avo:  " + GetComponent<CharacterStats>().currentAvoid);
+                GetTerrainBonus();
             }
             //Move();
         }
@@ -112,11 +111,11 @@ public class EnemyMovement : CharacterMovement
             ClearAttackableTiles();
             Debug.Log(name + ": End->Begin");
             characterState = CharacterState.Begin;
-            GetComponent<CharacterStats>().currentAvoid = GetComponent<CharacterMovement>().GetCurrentTile().terrainData.bonusAvo;
-            Debug.Log("Bonus Avo:  " + GetComponent<CharacterStats>().currentAvoid);
+            GetTerrainBonus();
             TurnManager.instance.EndTurn();
         }
     }
+
 
     void CalculatePath() {
         Tile targetTile = GetTargetTile(target);

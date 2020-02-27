@@ -118,6 +118,13 @@ public class CharacterMovement : MonoBehaviour
         }
     }
 
+    public void GetTerrainBonus(){
+        GetComponent<CharacterStats>().currentAvoid = GetCurrentTile().terrainData.bonusAvo;
+        GetComponent<CharacterStats>().currentDef = GetComponent<CharacterStats>().baseDef + GetComponent<CharacterMovement>().GetCurrentTile().terrainData.bonusDef;
+        Debug.Log("Bonus Avo:  " + GetComponent<CharacterStats>().currentAvoid);
+        Debug.Log("Bonus Def:  " + GetComponent<CharacterStats>().currentDef);
+    }
+
     public void FindSelectableTiles(){
         if (selectableTiles.Count > 0) {
             return;
