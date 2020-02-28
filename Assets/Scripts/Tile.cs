@@ -91,6 +91,7 @@ public class Tile : MonoBehaviour
     public void Reset(){
         adjacentTiles.Clear();
         attackableTiles.Clear();
+        itemTiles.Clear();
         current = false;
         target = false;
         selectable = false;

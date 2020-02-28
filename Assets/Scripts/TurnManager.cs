@@ -43,6 +43,7 @@ public class TurnManager : MonoBehaviour
     void Start() {
         instance = this;
         activePlayer = null;
+        Cursor.lockState = CursorLockMode.Confined;
     }
     // Update is called once per frame
     void Update()
