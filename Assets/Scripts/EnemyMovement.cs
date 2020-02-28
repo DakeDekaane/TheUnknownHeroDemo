@@ -25,7 +25,6 @@ public class EnemyMovement : CharacterMovement
     // Update is called once per frame
     void Update()
     {
-        GetTerrainBonus();
         Debug.DrawRay(transform.position,transform.forward);
         Debug.DrawRay(transform.position + new Vector3(0.0f,0.5f,0.0f),-transform.up);
 

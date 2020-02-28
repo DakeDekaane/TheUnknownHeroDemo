@@ -64,6 +64,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healAmount: 10
   particles: {fileID: 8183438066602164362}
+  usedMaterial: {fileID: 2100000, guid: 977ff5b1eaf072144ae31cfbeee44023, type: 2}
+  used: 0
 --- !u!1 &1334552976021266873
 GameObject:
   m_ObjectHideFlags: 0

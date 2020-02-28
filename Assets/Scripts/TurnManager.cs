@@ -137,6 +137,12 @@ public class TurnManager : MonoBehaviour
     }
 
     public  void StartTurn() {
+        foreach(CharacterMovement obj in playerList) {
+            obj.GetTerrainBonus();
+        }
+        foreach(CharacterMovement obj in enemyList) {
+            obj.GetTerrainBonus();
+        }
         ClearActedCharacter();
         if(turnTeam == Faction.Ally || turnTeam == Faction.Enemy) {
             if(turnList.Count > 0) {

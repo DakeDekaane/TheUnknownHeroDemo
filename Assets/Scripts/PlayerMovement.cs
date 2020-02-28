@@ -23,7 +23,6 @@ public class PlayerMovement : CharacterMovement
 
     // Update is called once per frame
     void Update() {
-        GetTerrainBonus();
         Debug.DrawRay(transform.position,transform.forward);
         Debug.DrawRay(transform.position + new Vector3(0.0f,0.5f,0.0f),-transform.up);
 
@@ -184,8 +183,10 @@ public class PlayerMovement : CharacterMovement
 
     public void UseItem() {
         GetComponent<CharacterStats>().Heal(healBox.healAmount);
+        healBox.SetUsedMaterial();
         healBox.PlayParticles();
-        Destroy(healBox.gameObject,1.0f);
+        healBox.used = true;
+        //Destroy(healBox.gameObject,1.0f);
         foreach(Tile tile in currentTile.adjacentTiles) {
             tile.attackable = false;
         }

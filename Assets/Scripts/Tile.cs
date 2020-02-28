@@ -132,7 +132,7 @@ public class Tile : MonoBehaviour
         Collider[] frontColliders = Physics.OverlapBox(transform.position + direction * 2.0f, transform.localScale * 0.1f);
         foreach(Collider c in frontColliders) {
             Tile tmpTile = c.GetComponent<Tile>();
-            if (tmpTile != null && tmpTile.GetObject() == "Item") {
+            if (tmpTile != null && tmpTile.GetItem() != null && !tmpTile.GetItem().used) {
                     Debug.Log("Item found!");
                     itemTiles.Add(tmpTile);
             }
