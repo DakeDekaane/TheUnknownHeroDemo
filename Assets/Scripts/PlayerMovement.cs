@@ -174,6 +174,7 @@ public class PlayerMovement : CharacterMovement
 
     void CheckForItem(){
         currentTile = GetCurrentTile();
+        ShowCurrentTile();
         currentTile.GetItemTiles();
         foreach(Tile tile in currentTile.itemTiles) {
             healBox = tile.GetItem();

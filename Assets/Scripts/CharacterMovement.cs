@@ -131,6 +131,7 @@ public class CharacterMovement : MonoBehaviour
         }
         ComputeAdjacentTiles(null);
         GetCurrentTile();
+        ShowCurrentTile();
         process.Enqueue(currentTile);
         currentTile.visited = true;
         //currentTile.parent = null;
@@ -165,6 +166,7 @@ public class CharacterMovement : MonoBehaviour
         }
         ComputeAttackableTiles();
         currentTile = GetCurrentTile();
+        ShowCurrentTile();
         process.Enqueue(currentTile);
         currentTile.visited = true;
         //currentTile.parent = null;
@@ -277,6 +279,7 @@ public class CharacterMovement : MonoBehaviour
     protected void FindPath(Tile target){
         ComputeAdjacentTiles(target);
         GetCurrentTile();
+        ShowCurrentTile();
         List<Tile> openList = new List<Tile>();
         List<Tile> closedList = new List<Tile>();
 

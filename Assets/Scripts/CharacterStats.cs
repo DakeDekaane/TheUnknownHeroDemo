@@ -56,7 +56,7 @@ public class CharacterStats : MonoBehaviour
 
     public void Attack(CharacterStats enemy) {
         if(Random.Range(0,100) < 100 - enemy.currentAvoid) {
-            damage = baseAtk - enemy.baseDef;
+            damage = currentAtk - enemy.currentDef;
             if (damage < 0) {
                 damage = 0;
             }
@@ -83,6 +83,9 @@ public class CharacterStats : MonoBehaviour
 
     public void Heal(int healAmount) {
         currentHealth += healAmount;
+        if(currentHealth > maxHealth) {
+            currentHealth = maxHealth;
+        }
         HPBar.fillAmount = currentHealth/maxHealth;
         if (currentHealth/maxHealth < minHealthValue) {
             HPBar.color = highHealth;

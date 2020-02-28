@@ -7,6 +7,7 @@ public class EnemyMovement : CharacterMovement
     public enum EnemyBehaviour {
         Nearest,
         HighestDamage,
+        Guard
         //KillFirst
     }
     public EnemyBehaviour behaviour;
@@ -44,6 +45,9 @@ public class EnemyMovement : CharacterMovement
             if (attackableTiles.Count > 0) {
                 foreach(Tile tile in attackableTiles) {
                     Debug.Log("Attackables:" + tile.name);
+                }
+                if (!attackableTiles.Contains(target.GetComponent<CharacterMovement>().GetCurrentTile())){
+                    target = attackableTiles[Random.Range(0,attackableTiles.Count-1)].GetCharacter();
                 }
                 Debug.Log(name + ": Begin->Attack");
                 characterState = CharacterState.Attack;
@@ -150,6 +154,9 @@ public class EnemyMovement : CharacterMovement
             }
             target = highest;
             //target.transform.GetComponentInChildren<Renderer>().material.color = Color.white;
+        }
+        if (behaviour == EnemyBehaviour.Guard) {
+            target = this.gameObject;
         }
     }
 }

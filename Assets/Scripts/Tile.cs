@@ -184,7 +184,14 @@ public class Tile : MonoBehaviour
         return null;
     }
 
-    
+    public GameObject GetCharacter() {
+        if (Physics.Raycast(transform.position, Vector3.up, out hit, 1)) {
+            if(hit.transform.tag == "Player") {
+                return hit.transform.gameObject;
+            }
+        }
+        return null;
+    }
     /*
     public void GetAttackTiles(int attackRange) {
         if (attackRange == 0) {
