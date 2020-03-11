@@ -16,12 +16,20 @@ public enum CharacterState {
     End
 }
 
+public enum SelectStatus {
+    Selected,
+    Unselected,
+    Acted
+}
+
 public class CharacterMovement : MonoBehaviour
 {
 
     public GameObject target;
     public bool turn = false;
     public bool selected = false;
+
+    public SelectStatus status = SelectStatus.Unselected;
 
     public CharacterState characterState = CharacterState.Begin;
 
@@ -53,6 +61,12 @@ public class CharacterMovement : MonoBehaviour
     public AudioClip[] SFX;
     protected AudioSource audioSource;
 
+
+    public Material selectedMaterial;
+    public Material unselectedMaterial;
+    public Material actedMaterial;
+
+
     protected void Init() {
 
         characterAnimator = GetComponent<Animator>();
@@ -63,8 +77,16 @@ public class CharacterMovement : MonoBehaviour
 
     public Tile GetCurrentTile() {
         currentTile = GetTargetTile(this.gameObject);
-        currentTile.current = true;
+        //currentTile.current = true;
         return currentTile;
+    }
+
+    public void ShowCurrentTile() {
+        currentTile.current = true;
+    }
+
+    public void ClearCurrentTile(){
+        currentTile.current = false;
     }
 
     public Tile GetTargetTile(GameObject target) {
@@ -96,12 +118,20 @@ public class CharacterMovement : MonoBehaviour
         }
     }
 
+    public void GetTerrainBonus(){
+        GetComponent<CharacterStats>().currentAvoid = GetCurrentTile().terrainData.bonusAvo;
+        GetComponent<CharacterStats>().currentDef = GetComponent<CharacterStats>().baseDef + GetComponent<CharacterMovement>().GetCurrentTile().terrainData.bonusDef;
+        Debug.Log("Bonus Avo:  " + GetComponent<CharacterStats>().currentAvoid);
+        Debug.Log("Bonus Def:  " + GetComponent<CharacterStats>().currentDef);
+    }
+
     public void FindSelectableTiles(){
         if (selectableTiles.Count > 0) {
             return;
         }
         ComputeAdjacentTiles(null);
         GetCurrentTile();
+        ShowCurrentTile();
         process.Enqueue(currentTile);
         currentTile.visited = true;
         //currentTile.parent = null;
@@ -128,13 +158,15 @@ public class CharacterMovement : MonoBehaviour
             tile.attackable = true;
         }
     }
+
     public void FindAttackableTiles(string player){
         string opponent = "";
         if (attackableTiles.Count > 0) {
             return;
         }
         ComputeAttackableTiles();
-        GetCurrentTile();
+        currentTile = GetCurrentTile();
+        ShowCurrentTile();
         process.Enqueue(currentTile);
         currentTile.visited = true;
         //currentTile.parent = null;
@@ -161,7 +193,7 @@ public class CharacterMovement : MonoBehaviour
             opponent = "Player";
         }
         for(int i = attackableTiles.Count - 1; i >= 0 ;i--) {
-            if(attackableTiles[i].GetTerrain() != opponent) {
+            if(attackableTiles[i].GetObject() != opponent) {
 //                Debug.Log("Not " + opponent + " in " + attackableTiles[i].name);
                 //attackableTiles[i].attackable = false;
                 attackableTiles.RemoveAt(i);
@@ -247,6 +279,7 @@ public class CharacterMovement : MonoBehaviour
     protected void FindPath(Tile target){
         ComputeAdjacentTiles(target);
         GetCurrentTile();
+        ShowCurrentTile();
         List<Tile> openList = new List<Tile>();
         List<Tile> closedList = new List<Tile>();
 
@@ -308,9 +341,9 @@ public class CharacterMovement : MonoBehaviour
             tmpPath.Push(next);
             next = next.parent;
         }
-        for (int i = 1; i < attackRange; i++) {
+        /*for (int i = 1; i < attackRange; i++) {
             tmpPath.Pop();
-        }
+        }*/
 
         if(tmpPath.Count <= movementCost) {
             return target.parent;
@@ -342,6 +375,19 @@ public class CharacterMovement : MonoBehaviour
         if (GetComponent<CharacterStats>().currentHealth <= 0) {
             //Debug.Log("I'm dead");
             characterAnimator.SetTrigger("Death");
+        }
+    }
+
+    public void SetStatus(SelectStatus status) {
+        this.status = status;
+        if(status == SelectStatus.Selected) {
+            GetComponentInChildren<SkinnedMeshRenderer>().material = selectedMaterial;
+        }
+        if(status == SelectStatus.Unselected) {
+            GetComponentInChildren<SkinnedMeshRenderer>().material = unselectedMaterial;
+        }
+        if(status == SelectStatus.Acted) {
+            GetComponentInChildren<SkinnedMeshRenderer>().material = actedMaterial;
         }
     }
 }

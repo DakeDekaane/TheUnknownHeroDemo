@@ -11,6 +11,7 @@ TagManager:
   - Bush
   - Ruins
   - ClockWork
+  - BoxMarker
   layers:
   - Default
   - TransparentFX

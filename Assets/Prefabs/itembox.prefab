@@ -16,7 +16,7 @@ GameObject:
   m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 16
+  m_StaticEditorFlags: 12
   m_IsActive: 1
 --- !u!4 &1334552976021765523
 Transform:
@@ -64,6 +64,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healAmount: 10
   particles: {fileID: 8183438066602164362}
+  usedMaterial: {fileID: 2100000, guid: 977ff5b1eaf072144ae31cfbeee44023, type: 2}
+  used: 0
 --- !u!1 &1334552976021266873
 GameObject:
   m_ObjectHideFlags: 0
@@ -80,7 +82,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 16
+  m_StaticEditorFlags: 12
   m_IsActive: 1
 --- !u!4 &1334552976021765529
 Transform:
@@ -158,7 +160,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 16
+  m_StaticEditorFlags: 12
   m_IsActive: 1
 --- !u!4 &1334552976021765531
 Transform:
@@ -235,7 +237,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 16
+  m_StaticEditorFlags: 12
   m_IsActive: 1
 --- !u!4 &1334552976021765533
 Transform:
@@ -312,7 +314,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 16
+  m_StaticEditorFlags: 12
   m_IsActive: 1
 --- !u!4 &1334552976021765535
 Transform:
@@ -389,7 +391,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 16
+  m_StaticEditorFlags: 12
   m_IsActive: 1
 --- !u!4 &1396517163514555313
 Transform:

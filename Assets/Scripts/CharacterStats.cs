@@ -13,20 +13,20 @@ public class CharacterStats : MonoBehaviour
     public int maxHealth;
     public int baseAtk;
     public int baseDef;
-    public int baseAccuracy;
+    public int baseAvoid;
 
     public int currentHealth;
     public int currentAtk;
     public int currentDef;
-    public int currentAccuracy;
+    public int currentAvoid;
 
     public Image HPBar;
     public Color highHealth;
     public Color lowHealth;
     public float minHealthValue;
 
-    public Transform cameraOrientation;
     private int damage;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -35,13 +35,16 @@ public class CharacterStats : MonoBehaviour
         currentHealth = maxHealth;
         currentAtk = baseAtk;
         currentDef = baseDef;
-        currentAccuracy = baseAccuracy;
+        currentAvoid = baseAvoid;
     }
 
     // Update is called once per frame
     void Update()
     {
-        HPBar.transform.forward = cameraOrientation.forward;
+        HPBar.transform.forward = Camera.main.transform.forward;
+    }
+
+    void UpdateHPBar() {
         HPBar.fillAmount = (float)currentHealth/maxHealth;
         if (HPBar.fillAmount < minHealthValue) {
             HPBar.color = lowHealth;
@@ -52,8 +55,8 @@ public class CharacterStats : MonoBehaviour
     }
 
     public void Attack(CharacterStats enemy) {
-        if(Random.Range(0,100) < currentAccuracy) {
-            damage = baseAtk - enemy.baseDef;
+        if(Random.Range(0,100) < 100 - enemy.currentAvoid) {
+            damage = currentAtk - enemy.currentDef;
             if (damage < 0) {
                 damage = 0;
             }
@@ -75,13 +78,18 @@ public class CharacterStats : MonoBehaviour
         if (currentHealth/maxHealth < minHealthValue) {
             HPBar.color = lowHealth;
         }
+        UpdateHPBar();
     }
 
     public void Heal(int healAmount) {
         currentHealth += healAmount;
+        if(currentHealth > maxHealth) {
+            currentHealth = maxHealth;
+        }
         HPBar.fillAmount = currentHealth/maxHealth;
         if (currentHealth/maxHealth < minHealthValue) {
             HPBar.color = highHealth;
         }
+        UpdateHPBar();
     }
 }

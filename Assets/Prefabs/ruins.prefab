@@ -15,7 +15,7 @@ GameObject:
   m_TagString: Ruins
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 3
+  m_StaticEditorFlags: 119
   m_IsActive: 1
 --- !u!4 &2298392900157522736
 Transform:
@@ -63,7 +63,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 3
+  m_StaticEditorFlags: 119
   m_IsActive: 1
 --- !u!4 &2298392900157522738
 Transform:
@@ -140,7 +140,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 3
+  m_StaticEditorFlags: 119
   m_IsActive: 1
 --- !u!4 &2298392900157522740
 Transform:
@@ -217,7 +217,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 3
+  m_StaticEditorFlags: 119
   m_IsActive: 1
 --- !u!4 &2298392900157522742
 Transform:
@@ -296,7 +296,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 3
+  m_StaticEditorFlags: 119
   m_IsActive: 1
 --- !u!4 &2298392900157522748
 Transform:

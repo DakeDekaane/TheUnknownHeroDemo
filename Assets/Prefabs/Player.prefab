@@ -5165,6 +5165,9 @@ MonoBehaviour:
   actualTargetTile: {fileID: 0}
   SFX:
   - {fileID: 8300000, guid: c2d2c2ef80935234b840c823b85622dc, type: 3}
+  selectedMaterial: {fileID: 2100000, guid: 55c5451c43ec0be4995103c66679340c, type: 2}
+  unselectedMaterial: {fileID: 2100000, guid: cac0195a276cbd241b0fe8270730ccbd, type: 2}
+  actedMaterial: {fileID: 2100000, guid: 48986e0935f38df4cbffcc1635f31458, type: 2}
   distance: 50
   actionUIManager: {fileID: 0}
   healBox: {fileID: 0}

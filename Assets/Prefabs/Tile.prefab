@@ -19,7 +19,7 @@ GameObject:
   m_TagString: Tile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 19
+  m_StaticEditorFlags: 5
   m_IsActive: 1
 --- !u!4 &2639174633184637471
 Transform:
@@ -105,7 +105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac79a97f807369b41aa5d81dcc3d64c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  terrain: 
+  terrain: 0
   originalMaterial: {fileID: 2100000, guid: c70e1a0a3bad70d45a0ad1d7e40ac060, type: 2}
   walkable: 1
   current: 0

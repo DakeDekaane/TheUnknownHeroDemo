@@ -7,6 +7,7 @@ public class EnemyMovement : CharacterMovement
     public enum EnemyBehaviour {
         Nearest,
         HighestDamage,
+        Guard
         //KillFirst
     }
     public EnemyBehaviour behaviour;
@@ -45,6 +46,9 @@ public class EnemyMovement : CharacterMovement
                 foreach(Tile tile in attackableTiles) {
                     Debug.Log("Attackables:" + tile.name);
                 }
+                if (!attackableTiles.Contains(target.GetComponent<CharacterMovement>().GetCurrentTile())){
+                    target = attackableTiles[Random.Range(0,attackableTiles.Count-1)].GetCharacter();
+                }
                 Debug.Log(name + ": Begin->Attack");
                 characterState = CharacterState.Attack;
                 return;
@@ -55,33 +59,37 @@ public class EnemyMovement : CharacterMovement
             if(!(actualTargetTile.target && actualTargetTile.current)) {
                 Debug.Log(name + ": Begin->Move");
                 characterState = CharacterState.Move;
-                TurnManager.instance.CollidersEnabled(false);
+                //TurnManager.instance.CollidersEnabled(false);
                 targetTransform = actualTargetTile.transform;
-                targetTransform.position += new Vector3(0.0f,0.5f,0.0f);
                 Debug.Log("Target: " + targetTransform.position);
-                characterAgent.SetDestination(targetTransform.position);
+                characterAgent.SetDestination(targetTransform.position + new Vector3(0.0f,0.5f,0.0f));
                 GetComponentInChildren<ParticleSystem>().Play();
                 characterAgent.isStopped = false;
                 characterAnimator.SetBool("Move",true);
+            }
+            else {
+                Debug.Log(name + ": Begin->Attack");
+                characterState = CharacterState.Attack;
             }
         }
         
         else if(characterState == CharacterState.Move) {
             //Debug.Log("Distance to target: "+ characterAgent.remainingDistance);
             if (characterAgent.remainingDistance <= 0.37f && characterAgent.hasPath) {
-                TurnManager.instance.CollidersEnabled(true);
+                //TurnManager.instance.CollidersEnabled(true);
                 characterAgent.isStopped = true;
                 characterAnimator.SetBool("Move", false);
                 ClearSelectableTiles();
                 Debug.Log(name + ": Move->Attack");
                 characterState = CharacterState.Attack;
                 GetComponentInChildren<ParticleSystem>().Stop();
-                
+                GetTerrainBonus();
             } 
             if (actualTargetTile.target && actualTargetTile.current) {
                 ClearSelectableTiles();
                 characterState = CharacterState.Attack;
                 GetComponentInChildren<ParticleSystem>().Stop();
+                GetTerrainBonus();
             }
             //Move();
         }
@@ -106,9 +114,11 @@ public class EnemyMovement : CharacterMovement
             ClearAttackableTiles();
             Debug.Log(name + ": End->Begin");
             characterState = CharacterState.Begin;
+            GetTerrainBonus();
             TurnManager.instance.EndTurn();
         }
     }
+
 
     void CalculatePath() {
         Tile targetTile = GetTargetTile(target);
@@ -144,6 +154,9 @@ public class EnemyMovement : CharacterMovement
             }
             target = highest;
             //target.transform.GetComponentInChildren<Renderer>().material.color = Color.white;
+        }
+        if (behaviour == EnemyBehaviour.Guard) {
+            target = this.gameObject;
         }
     }
 }

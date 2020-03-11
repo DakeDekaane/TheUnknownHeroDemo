@@ -5104,7 +5104,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1eaddd3f6b67c3c44a293064f7fcebe1, type: 2}
+  - {fileID: 2100000, guid: 7bb423e6ac0befb46a03450001848b24, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5304,6 +5304,9 @@ MonoBehaviour:
   actualTargetTile: {fileID: 0}
   SFX:
   - {fileID: 8300000, guid: b8a4873a64b8bae4fa772e0894ba4e46, type: 3}
+  selectedMaterial: {fileID: 2100000, guid: dab520df5f4b23941b3d729779aff68c, type: 2}
+  unselectedMaterial: {fileID: 2100000, guid: 7bb423e6ac0befb46a03450001848b24, type: 2}
+  actedMaterial: {fileID: 2100000, guid: 1eaddd3f6b67c3c44a293064f7fcebe1, type: 2}
   behaviour: 0
 --- !u!82 &82303434522333530
 AudioSource:
